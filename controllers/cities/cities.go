@@ -25,8 +25,8 @@ func Register(e *gin.Engine) {
 	// routes
 	e.GET("/cities", c.getCities)
 	e.POST("/cities", c.createCity)
-	e.PUT("/cities", c.updateCities)
-	e.DELETE("/cities", c.deleteCities)
+	e.PUT("/cities", c.updateCity)
+	e.DELETE("/cities", c.deleteCity)
 }
 
 // FIND CITIES BY QUERY OR LIST ALL
@@ -36,7 +36,7 @@ func (*citiesController) getCities(c *gin.Context) {
 	for k, v := range c.Request.URL.Query() {
 		filter[k] = v[0] // fixes query value being a slice of strings
 	}
-	fmt.Printf("%s\n", filter)
+
 	if id, exists := filter["_id"]; exists {
 		if bson.IsObjectIdHex(id) {
 			if err := d.FindId(bson.ObjectIdHex(id)).All(&cities); err == nil {
@@ -52,7 +52,7 @@ func (*citiesController) getCities(c *gin.Context) {
 	}
 
 	c.JSON(400, gin.H{
-		"error": "Bad request - Unable to find cities",
+		"error": "Bad request - Unable to find cities!",
 	})
 }
 
@@ -74,16 +74,38 @@ func (*citiesController) createCity(c *gin.Context) {
 	})
 }
 
-// UPDATE CITIES THAT MATCH QUERY
-func (*citiesController) updateCities(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "Not implemented",
+// UPDATE CITY BY ID QUERY
+func (*citiesController) updateCity(c *gin.Context) {
+	if id := c.Query("_id"); id != "" && bson.IsObjectIdHex(id) {
+		updates := city.City{}
+
+		if c.ShouldBindJSON(&updates) == nil {
+			if err := d.UpdateId(bson.ObjectIdHex(id), updates); err == nil {
+				c.JSON(200, gin.H{
+					"message": fmt.Sprintf("City %s successfully updated!", updates.Name),
+				})
+				return
+			}
+		}
+	}
+
+	c.JSON(400, gin.H{
+		"error": "Bad request - Unable to update city!",
 	})
 }
 
-// DELETE CITIES THAT MATCH QUERY
-func (*citiesController) deleteCities(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "Not implemented",
+// DELETE CITY BY ID QUERY
+func (*citiesController) deleteCity(c *gin.Context) {
+	if id := c.Query("_id"); id != "" && bson.IsObjectIdHex(id) {
+		if d.RemoveId(bson.ObjectIdHex(id)) == nil {
+			c.JSON(200, gin.H{
+				"message": fmt.Sprintf("City with _id %s successfully deleted!", id),
+			})
+			return
+		}
+	}
+
+	c.JSON(400, gin.H{
+		"error": "Bad request - Unable to delete city!",
 	})
 }

@@ -1,0 +1,58 @@
+.issues_header_card {
+  padding: 20px;
+  color: rgb(206, 14, 14);
+  font-size: 1.2em;
+  background-color: #fff;
+}
+
+.issues_card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #fff;
+  margin: 10px 0 10px 0;
+  box-shadow: 0 5px 10px rgba(146, 137, 137, 0.548);
+}
+
+.issues_card_profile_pic {
+  border-radius: 50%;
+  width: 20vw;
+  margin-left: 15px;
+}
+
+.issue_name {
+  margin: 0;
+  font-weight: 300;
+  font-size: 1.1em;
+}
+
+.issue_description {
+  margin-left: 15px;
+  font-size: 0.8em;
+}
+
+.resolve_btn {
+  padding: 8px 5vw 8px 5vw;
+  font-size: 0.9em;
+  color: #fff;
+  background-color: #036df2;
+  border-radius: 5px;
+}
+
+.issue {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.issue_box {
+  padding: 15px;
+  margin-left: 20px;
+}
+
+@media (max-width: 700px) {
+
+}

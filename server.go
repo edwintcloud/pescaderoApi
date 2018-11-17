@@ -7,6 +7,7 @@ import (
 	"pescaderoApi/controllers/cities"
 	"pescaderoApi/utils/db"
 
+	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -28,12 +29,8 @@ func main() {
 	// create new instance of gin with default middlewares
 	e := gin.Default()
 
-	// index route
-	e.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "Welcome to pescaderoApi 🎉!",
-		})
-	})
+	// Serve frontend static files
+	e.Use(static.Serve("/", static.LocalFile("./client/build", true)))
 
 	// register controller routes
 	cities.Register(e)

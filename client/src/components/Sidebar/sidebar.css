@@ -1,0 +1,58 @@
+.contributor_profile_pic {
+  height: 8vh;
+  border-radius: 50%;
+  margin: 7px 0;
+}
+
+.top_contributors {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  font-size: .6em;
+}
+
+.top_contributors > p {
+  margin: 4px 0 0 0;
+}
+
+.contributor_profile_pics {
+  background-color: rgb(161, 161, 161);
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.issues_resolved,
+.member_count {
+  background-color: rgb(221, 229, 236);
+  box-shadow: 0 5px 10px rgba(146, 137, 137, 0.548);
+  display: flex;
+}
+
+.sidebar_container > div:not(:last-child) {
+  margin-bottom: 2vh;
+}
+
+.sidebar_container p {
+  margin-left: 2vw;
+}
+
+.share_link {
+  font-size: .7em;
+}
+
+.share_link > p:first-child {
+  background-color: rgb(196, 196, 196);
+  width: fit-content;
+  margin: 0;
+  padding: 5px;
+  box-shadow: 0 5px 10px rgba(146, 137, 137, 0.548);
+}
+.share_link > p:last-child {
+  background-color: white;
+  margin: 0;
+  padding: 5px;
+  box-shadow: 0 5px 10px rgba(146, 137, 137, 0.548);
+}

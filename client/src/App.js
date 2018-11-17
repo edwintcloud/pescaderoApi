@@ -10,7 +10,7 @@ class App extends Component {
   render() {
     return (
       <HashRouter> 
-      <div>
+      <div style={{fontSize:'1.3em'}}>
          <Map></Map>
          <Route exact path="/" component={Index} />
          <Route exact path="/issues/new" component={CreateIssue} />

@@ -5,7 +5,6 @@
   grid-template-areas: "m m m"
                        "i i s"
                        "f f f";
-  font-size: 1.3em;
 }
 
 .map_container {

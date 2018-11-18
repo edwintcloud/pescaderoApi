@@ -5,6 +5,8 @@ import (
 	"log"
 	"os"
 	"pescaderoApi/controllers/cities"
+	"pescaderoApi/controllers/users"
+
 	"pescaderoApi/utils/db"
 
 	"github.com/gin-contrib/static"
@@ -34,6 +36,7 @@ func main() {
 
 	// register controller routes
 	cities.Register(e)
+	users.Register(e)
 
 	// catch all requests to non-existing endpoints
 	e.NoRoute(func(c *gin.Context) {

@@ -34,6 +34,146 @@
   font-size: .7em;
 }
 
+.issues_header_card {
+  padding: 20px;
+  color: rgb(206, 14, 14);
+  font-size: 1.2em;
+  background-color: #fff;
+}
+
+.issues_card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #fff;
+  margin: 10px 0 10px 0;
+  box-shadow: 0 5px 10px rgba(146, 137, 137, 0.548);
+}
+
+.new_issue_header {
+  padding: 20px;
+  color: black;
+  font-size: 1.2em;
+}
+
+.contributor_profile_pic {
+  height: 8vh;
+  border-radius: 50%;
+  margin: 7px 0;
+}
+
+.top_contributors {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  font-size: .6em;
+}
+
+.top_contributors > p {
+  margin: 4px 0 0 0;
+}
+
+.contributor_profile_pics {
+  background-color: rgb(161, 161, 161);
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.issues_resolved,
+.member_count {
+  background-color: rgb(221, 229, 236);
+  box-shadow: 0 5px 10px rgba(146, 137, 137, 0.548);
+  display: flex;
+}
+
+.sidebar_container > div:not(:last-child) {
+  margin-bottom: 2vh;
+}
+
+.sidebar_container p {
+  margin-left: 2vw;
+}
+
+.share_link {
+  font-size: .7em;
+}
+
+.share_link > p:first-child {
+  background-color: rgb(196, 196, 196);
+  width: fit-content;
+  margin: 0;
+  padding: 5px;
+  box-shadow: 0 5px 10px rgba(146, 137, 137, 0.548);
+}
+.share_link > p:last-child {
+  background-color: white;
+  margin: 0;
+  padding: 5px;
+  box-shadow: 0 5px 10px rgba(146, 137, 137, 0.548);
+}
+
+.create_btn {
+  padding: 8px 5vw 8px 5vw;
+  font-size: 0.9em;
+  color: #fff;
+  background-color: #036df2;
+  border-radius: 5px;
+}
+
+.btn_box {
+  align-self: flex-end;
+}
+
+.new_issue_container {
+  margin-left: 100px;
+  grid-area: i;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.issues_card_profile_pic {
+  border-radius: 50%;
+  width: 20vw;
+  margin-left: 15px;
+}
+
+.issue_name {
+  margin: 0;
+  font-weight: 300;
+  font-size: 1.1em;
+}
+
+.issue_description {
+  margin-left: 15px;
+  font-size: 0.8em;
+}
+
+.resolve_btn {
+  padding: 8px 5vw 8px 5vw;
+  font-size: 0.9em;
+  color: #fff;
+  background-color: #036df2;
+  border-radius: 5px;
+}
+
+.issue {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.issue_box {
+  padding: 15px;
+  margin-left: 20px;
+}
+
 @media (max-width: 700px) {
   .container {
     grid-template-areas: "m m m"

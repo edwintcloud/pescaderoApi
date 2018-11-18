@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Issues from '../components/Issues/issues';
-import Sidebar from '../components/Sidebar/sidebar';
+import Issues from '../components/issues';
+import Sidebar from '../components/sidebar';
 
 class Index extends Component {
   render() {

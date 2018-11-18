@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { HashRouter, Route } from "react-router-dom";
 import './App.css';
-import Map from './components/Map/map';
-import Footer from './components/Footer/footer';
+import Map from './components/map';
+import Footer from './components/footer';
 import CreateIssue from './pages/create-issue';
 import Index from './pages/index';
 

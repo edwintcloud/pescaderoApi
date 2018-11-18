@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import NewIssue from '../components/NewIssue/issues-new';
+import NewIssue from '../components/issues-new';
 
 class CreateIssue extends Component {
   render() {

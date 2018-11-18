@@ -24,8 +24,8 @@ func Register(e *gin.Engine) {
 	//routes
 	e.GET("/users", c.getUsers)
 	e.POST("/users", c.createUser)
-	e.PUT("/users", c.updateCity)
-	e.DELETE("/users", c.deleteCity)
+	e.PUT("/users", c.updateUser)
+	e.DELETE("/users", c.deleteUser)
 
 }
 
@@ -77,7 +77,7 @@ func (*usersController) createUser(c *gin.Context) {
 }
 
 // UPDATE User BY ID QUERY
-func (*usersController) updateCity(c *gin.Context) {
+func (*usersController) updateUser(c *gin.Context) {
 	if id := c.Query("_id"); id != "" && bson.IsObjectIdHex(id) {
 		updates := user.User{}
 
@@ -97,7 +97,7 @@ func (*usersController) updateCity(c *gin.Context) {
 }
 
 // DELETE User BY ID QUERY
-func (*usersController) deleteCity(c *gin.Context) {
+func (*usersController) deleteUser(c *gin.Context) {
 	if id := c.Query("_id"); id != "" && bson.IsObjectIdHex(id) {
 		if d.RemoveId(bson.ObjectIdHex(id)) == nil {
 			c.JSON(200, gin.H{

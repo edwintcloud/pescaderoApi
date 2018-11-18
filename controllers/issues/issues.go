@@ -28,7 +28,7 @@ func Register(e *gin.Engine) {
 	e.DELETE("/issues", c.deleteIssue)
 
 }
-1
+
 
 // FIND issues BY QUERY OR LIST ALL
 func (*issuesController) getIssues(c *gin.Context) {

@@ -1,12 +1,13 @@
-package users 
+package users
 
-import(
+import (
 	"fmt"
 	"pescaderoApi/models/user"
 	"pescaderoApi/utils/db"
-	"github.com/globalsign/mgo/bson"
+
 	"github.com/gin-gonic/gin"
 	"github.com/globalsign/mgo"
+	"github.com/globalsign/mgo/bson"
 )
 
 type usersController struct{}
@@ -14,27 +15,26 @@ type usersController struct{}
 var d *mgo.Collection
 
 // setting up user routes
-func Register(e *gin.Engine){
+func Register(e *gin.Engine) {
 	c := usersController{}
 
 	// set the db collection
 	d = db.DB.C("users")
-	
+
 	//routes
 	e.GET("/users", c.getUsers)
-	e.POST("/users",c.createUser)
+	e.POST("/users", c.createUser)
 	e.PUT("/users", c.updateCity)
 	e.DELETE("/users", c.deleteCity)
 
 }
 
-
 // FIND Users BY QUERY OR LIST ALL
-func (*usersController) getUsers(c *gin.Context){
+func (*usersController) getUsers(c *gin.Context) {
 
 	users := []user.User{}
 	filter := make(map[string]string)
-	for k, v := range c.Request.URL.Query(){
+	for k, v := range c.Request.URL.Query() {
 		filter[k] = v[0]
 	}
 
@@ -56,10 +56,7 @@ func (*usersController) getUsers(c *gin.Context){
 		"error": "Bad request - Unable to find users",
 	})
 
-
-
 }
-
 
 // CREATE ONE
 func (*usersController) createUser(c *gin.Context) {
@@ -79,7 +76,7 @@ func (*usersController) createUser(c *gin.Context) {
 	})
 }
 
-// UPDATE CITY BY ID QUERY
+// UPDATE User BY ID QUERY
 func (*usersController) updateCity(c *gin.Context) {
 	if id := c.Query("_id"); id != "" && bson.IsObjectIdHex(id) {
 		updates := user.User{}
@@ -114,8 +111,3 @@ func (*usersController) deleteCity(c *gin.Context) {
 		"error": "Bad request - Unable to delete User!",
 	})
 }
-
-
-
-
-

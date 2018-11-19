@@ -63,11 +63,13 @@ func (*usersController) createUser(c *gin.Context) {
 	user := user.User{}
 
 	if err := c.ShouldBindJSON(&user); err == nil {
-		if err := d.Insert(&user); err == nil {
-			c.JSON(200, gin.H{
-				"message": fmt.Sprintf("User %s added to database!", user.First_Name),
-			})
-			return
+		if user.CheckValid(&user) == nil {
+			if err := d.Insert(user.HashPassword(&user)); err == nil {
+				c.JSON(200, gin.H{
+					"message": fmt.Sprintf("User %s added to database!", user.FirstName),
+				})
+				return
+			}
 		}
 	}
 
@@ -79,14 +81,16 @@ func (*usersController) createUser(c *gin.Context) {
 // UPDATE User BY ID QUERY
 func (*usersController) updateUser(c *gin.Context) {
 	if id := c.Query("_id"); id != "" && bson.IsObjectIdHex(id) {
-		updates := user.User{}
+		user := user.User{}
 
-		if c.ShouldBindJSON(&updates) == nil {
-			if err := d.UpdateId(bson.ObjectIdHex(id), updates); err == nil {
-				c.JSON(200, gin.H{
-					"message": fmt.Sprintf("User %s successfully updated!", updates.First_Name),
-				})
-				return
+		if c.ShouldBindJSON(&user) == nil {
+			if user.CheckValid(&user) == nil {
+				if err := d.UpdateId(bson.ObjectIdHex(id), user.HashPassword(&user)); err == nil {
+					c.JSON(200, gin.H{
+						"message": fmt.Sprintf("User %s successfully updated!", user.FirstName),
+					})
+					return
+				}
 			}
 		}
 	}

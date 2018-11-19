@@ -29,7 +29,6 @@ func Register(e *gin.Engine) {
 
 }
 
-
 // FIND issues BY QUERY OR LIST ALL
 func (*issuesController) getIssues(c *gin.Context) {
 
@@ -80,14 +79,16 @@ func (*issuesController) createIssue(c *gin.Context) {
 // UPDATE Issue BY ID QUERY
 func (*issuesController) updateIssue(c *gin.Context) {
 	if id := c.Query("_id"); id != "" && bson.IsObjectIdHex(id) {
-		updates := issue.Issue{}
+		issue := issue.Issue{}
 
-		if c.ShouldBindJSON(&updates) == nil {
-			if err := d.UpdateId(bson.ObjectIdHex(id), updates); err == nil {
-				c.JSON(200, gin.H{
-					"message": fmt.Sprintf("Issue %s successfully updated!", updates.Title),
-				})
-				return
+		if c.ShouldBindJSON(&issue) == nil {
+			if issue.CheckValid(&issue) == nil {
+				if err := d.UpdateId(bson.ObjectIdHex(id), issue); err == nil {
+					c.JSON(200, gin.H{
+						"message": fmt.Sprintf("Issue %s successfully updated!", issue.Title),
+					})
+					return
+				}
 			}
 		}
 	}

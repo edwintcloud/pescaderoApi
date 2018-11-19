@@ -8,17 +8,18 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-//user model
+// User model
 type User struct {
-	ID         bson.ObjectId `json:"_id,omitempty" bson:"_id,omitempty"`
-	Avatar     string        `bson:"avatar" json:"avatar" binding:"required"`
-	First_Name string        `bson:"first_name" json:"first_name" binding:"required"`
-	Last_Name  string        `bson:"last_name" json:"last_name" binding:"required"`
-	Email      string        `bson:"email" json:"email" binding:"required"`
-	Password   string        `bson:"password" json:"password" binding:"required"`
-	City       bson.ObjectId `json:"city_id,omitempty" bson:"city_id,omitempty"`
+	ID        bson.ObjectId `json:"_id,omitempty" bson:"_id,omitempty"`
+	Avatar    string        `bson:"avatar,omitempty" json:"avatar,omitempty"`
+	FirstName string        `bson:"firstName" json:"firstName" binding:"required"`
+	LastName  string        `bson:"lastName" json:"lastName" binding:"required"`
+	Email     string        `bson:"email" json:"email" binding:"required"`
+	Password  string        `bson:"password" json:"password" binding:"required"`
+	City      bson.ObjectId `json:"city_id,omitempty" bson:"city_id,omitempty"`
 }
 
+// HashPassword hashes user password and returns user
 func (User) HashPassword(m *User) *User {
 
 	// generate hash from password.
@@ -43,7 +44,7 @@ func (User) CheckValid(m *User) error {
 		return errors.New("Password must be at least 6 characters!")
 	}
 	// Validate FirstName and LastName
-	if len(m.First_Name) < 2 || len(m.Last_Name) < 2 {
+	if len(m.FirstName) < 2 || len(m.LastName) < 2 {
 		return errors.New("names must be at least 3 characters")
 	}
 	//Validate Email

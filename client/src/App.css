@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:300');
 .container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -5,6 +6,8 @@
   grid-template-areas: "m m m"
                        "i i s"
                        "f f f";
+  font-size: 1.5em;
+  padding: 10px;
 }
 
 .map_container {
@@ -173,6 +176,89 @@
   padding: 15px;
   margin-left: 20px;
 }
+
+.landing_container {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background-image: linear-gradient(to top, #00c6fb 0%, #005bea 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.landing_box {
+  height: 60vh;
+  width: 40vw;
+  margin-bottom: 2vh;
+  background-color: white;
+  border-radius: 8px;
+  -webkit-box-shadow: 0px 8px 70px 12px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 8px 70px 12px rgba(0,0,0,0.75);
+  box-shadow: 0px 8px 70px 12px rgba(0,0,0,0.75);
+  font-family: 'Lato', sans-serif;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+}
+
+.landing_header {
+  grid-area: a;
+  font-size: 3.6em;
+  font-weight: 300;
+  margin: 20px 0;
+}
+
+.landing_sign_up {
+  grid-area: a;
+  display: flex;
+  flex-direction: column;
+  font-size: 1.3em;
+}
+
+.form_row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px;
+}
+
+.form_row > input, .form_row > select {
+  margin-left: 10px;
+  border-radius: 3px;
+  padding: 8px;
+  border: 1px silver solid;
+  font-size: .8em;
+  line-height: 10px;
+  height: 25px;
+}
+
+.form_row > input[type="submit"] {
+  padding: 20px;
+  line-height: 0;
+  background-color: #0067E2;
+  border: none;
+  color: white;
+  margin-top: 10px;
+}
+
+.form_row > input[type="submit"]:hover {
+  background-color: rgb(0, 94, 209);
+}
+
+/* .landing_sign_up > button {
+  background-color: #0062EB;
+  padding: 10px;
+  border: none;
+  border-radius: 3px;
+  font-size: 1em;
+  color: aliceblue;
+}
+
+.landing_sign_up > button:first-child {
+  margin-right: 10px;
+} */
 
 @media (max-width: 700px) {
   .container {

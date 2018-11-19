@@ -16,7 +16,6 @@ type Issue struct {
 	City        bson.ObjectId `json:"city_id,omitempty" bson:"city_id,omitempty"`
 }
 
-
 // Validate issue model.
 func (Issue) CheckValid(x *Issue) error {
 

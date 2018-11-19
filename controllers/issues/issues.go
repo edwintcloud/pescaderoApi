@@ -14,7 +14,7 @@ type issuesController struct{}
 
 var d *mgo.Collection
 
-// setting up issue routes
+// Register registers controller routes with gin engine
 func Register(e *gin.Engine) {
 	c := issuesController{}
 

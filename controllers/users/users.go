@@ -14,7 +14,7 @@ type usersController struct{}
 
 var d *mgo.Collection
 
-// setting up user routes
+// Register registers controller routes with gin engine
 func Register(e *gin.Engine) {
 	c := usersController{}
 

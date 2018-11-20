@@ -10,9 +10,9 @@ import (
 
 	"pescaderoApi/utils/db"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
-	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -34,8 +34,13 @@ func main() {
 	// create new instance of gin with default middlewares
 	e := gin.Default()
 
+	// setup CORS
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"http://localhost:3000"}
+	e.Use(cors.New(config))
+
 	// Serve frontend static files
-	e.Use(static.Serve("/", static.LocalFile("./client/build", true)))
+	// e.Use(static.Serve("/", static.LocalFile("./client/build", true)))
 
 	// setup sessions
 	store := cookie.NewStore([]byte(os.Getenv("COOKIE_SECRET")))

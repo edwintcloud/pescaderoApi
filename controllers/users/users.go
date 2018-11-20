@@ -6,6 +6,7 @@ import (
 	"pescaderoApi/models/user"
 	"pescaderoApi/utils/db"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
@@ -31,12 +32,16 @@ func Register(e *gin.Engine) {
 	d.EnsureIndex(index)
 
 	//routes
-	e.GET("/users", c.getUsers)
-	e.POST("/users", c.createUser)
-	// e.PUT("/users", c.updateUser)
-	// e.DELETE("/users", c.deleteUser)
-	e.POST("/users/login", c.loginUser)
-
+	routes := e.Group("/users")
+	{
+		routes.GET("", c.getUsers)
+		routes.POST("", c.createUser)
+		// e.PUT("/users", c.updateUser)
+		// e.DELETE("/users", c.deleteUser)
+		routes.POST("/login", c.loginUser)
+		routes.POST("/logout", c.logoutUser)
+		routes.GET("/current", c.getCurrentUser)
+	}
 }
 
 // FIND Users BY QUERY OR LIST ALL
@@ -165,8 +170,42 @@ func (*usersController) loginUser(c *gin.Context) {
 			"error": err.Error(),
 		})
 	} else {
+		// set session
+		session := sessions.Default(c)
+		// set password to empty so we don't expose it
+		foundUser.Password = ""
+		bytes, _ := bson.Marshal(&foundUser)
+		session.Set("user", string(bytes))
+		session.Save()
+
 		c.JSON(200, gin.H{
 			"message": "login success",
+		})
+	}
+}
+
+// logout a user
+func (*usersController) logoutUser(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Set("user", nil)
+	session.Save()
+
+	c.JSON(200, gin.H{
+		"message": "logout success",
+	})
+}
+
+// get current user
+func (*usersController) getCurrentUser(c *gin.Context) {
+	session := sessions.Default(c)
+	currentUser := user.User{}
+	currentSession := session.Get("user")
+	if currentSession != nil {
+		bson.Unmarshal([]byte(currentSession.(string)), &currentUser)
+		c.JSON(200, currentUser)
+	} else {
+		c.JSON(200, gin.H{
+			"message": "no user logged in",
 		})
 	}
 }

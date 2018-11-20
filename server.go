@@ -5,11 +5,13 @@ import (
 	"log"
 	"os"
 	"pescaderoApi/controllers/cities"
-	"pescaderoApi/controllers/users"
 	"pescaderoApi/controllers/issues"
+	"pescaderoApi/controllers/users"
 
 	"pescaderoApi/utils/db"
 
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -34,6 +36,10 @@ func main() {
 
 	// Serve frontend static files
 	e.Use(static.Serve("/", static.LocalFile("./client/build", true)))
+
+	// setup sessions
+	store := cookie.NewStore([]byte(os.Getenv("COOKIE_SECRET")))
+	e.Use(sessions.Sessions("session", store))
 
 	// register controller routes
 	cities.Register(e)

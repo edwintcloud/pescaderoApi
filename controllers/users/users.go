@@ -106,6 +106,14 @@ func (*usersController) createUser(c *gin.Context) {
 			"error": err.Error(),
 		})
 	} else {
+		// set session
+		session := sessions.Default(c)
+		// set password to empty so we don't expose it
+		reqUser.Password = ""
+		bytes, _ := bson.Marshal(&reqUser)
+		session.Set("user", string(bytes))
+		session.Save()
+
 		c.JSON(200, gin.H{
 			"message": fmt.Sprintf("user %s added to database", reqUser.FirstName),
 		})

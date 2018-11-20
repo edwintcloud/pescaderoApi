@@ -8,16 +8,18 @@
 .jumbo {
   margin-bottom: 0!important;
   padding: 0!important;
-  height: 95vh!important;
+  height: 100vh!important;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .footer {
   position: fixed;
-  bottom: 5px;
+  bottom: 10px;
   right: 10px;
 }
 

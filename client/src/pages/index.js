@@ -15,7 +15,7 @@ class Index extends Component {
        <Jumbotron className="jumbo">
         <h1 className="display-3">Project Pescadero</h1>
         <p className="lead mb-0">Changing the world, one small act of kindness at a time.</p>
-        <hr className="my-2 mb-3" style={{width:'30vw'}}/>
+        <hr className="my-2 mb-3" style={{width:'300px'}}/>
         <p className="lead">
           <Button color="primary mr-2 px-5">Log In</Button>
           <Link to="/signup">

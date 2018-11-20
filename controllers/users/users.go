@@ -21,6 +21,13 @@ func Register(e *gin.Engine) {
 	// set the db collection
 	d = db.DB.C("users")
 
+	// ensure the email field is indexed as unique
+	index := mgo.Index{
+		Key:    []string{"email"},
+		Unique: true,
+	}
+	d.EnsureIndex(index)
+
 	//routes
 	e.GET("/users", c.getUsers)
 	e.POST("/users", c.createUser)
@@ -70,7 +77,15 @@ func (*usersController) createUser(c *gin.Context) {
 				})
 				return
 			}
+			c.JSON(200, gin.H{
+				"error": "Email already registered!",
+			})
+			return
 		}
+		c.JSON(200, gin.H{
+			"error": "Validation error!",
+		})
+		return
 	}
 
 	c.JSON(400, gin.H{

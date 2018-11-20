@@ -11,8 +11,7 @@ import {
   Col,
   Row
 } from "reactstrap";
-
-import { Link } from 'react-router-dom';  
+import axios from 'axios';
 
 class SignUp extends Component {
   constructor(props) {
@@ -34,6 +33,7 @@ class SignUp extends Component {
   }
 
   handleChange(e) {
+    document.getElementById('email-feedback').innerHTML = `Please enter a valid email address!`;
     this.setState({[e.target.name]: e.target.value});
     if(e.target.name === 'email') {
       if (/.+@.+\..+/.test(e.target.value)) {
@@ -61,12 +61,33 @@ class SignUp extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    window.location = "#/dashboard";
-    const popup = window.open();
-    const result = JSON.stringify(this.state);
-    popup.document.open();
-    popup.document.write(result);
-    popup.document.close();
+    axios.post('/users', this.state).then(res => {
+      if('error' in res.data) {
+        this.setState({emailInvalid:true});
+        document.getElementById('email-feedback').innerHTML = `Email already registered! Please <a href="#/login">login</a>`;
+      } else {
+        window.location = "#/dashboard";
+      }
+    }).catch(err => {
+      console.log(err);
+    });
+    // fetch('http://localhost:5000/users', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: this.state
+    // }).then(res => res.body).then(body => {
+    //   console.log(res)
+    //   console.log(JSON.stringify(res.body))
+      // if(res.hasOwnProperty('error')) {
+      //   // handle error
+      //   alert(JSON.stringify(res))
+      // } else {
+      //   window.location = "#/dashboard";
+      // }
+    // })
   }
 
   render() {
@@ -75,7 +96,7 @@ class SignUp extends Component {
           <h1 className="display-4 mt-3 text-center">Sign Up</h1>
           <Card className="my-3 mx-3 mb-5">
             <CardBody>
-              <Form>
+              <Form onSubmit={this.handleSubmit}>
                 <Row form>
                   <Col md={6}>
                     <FormGroup>
@@ -93,7 +114,7 @@ class SignUp extends Component {
                 <FormGroup>
                   <Label for="email">Email</Label>
                   <Input type="text" name="email" id="email" value={this.state.email} onChange={this.handleChange} invalid={this.state.emailInvalid}/>
-                  <FormFeedback invalid>Please enter a valid email address!</FormFeedback>
+                  <FormFeedback id="email-feedback" invalid>Please enter a valid email address!</FormFeedback>
                 </FormGroup>
                 <FormGroup>
                   <Label for="password">Password</Label>
@@ -112,11 +133,9 @@ class SignUp extends Component {
             <option value="San Francisco">San Francisco</option>
           </Input>
         </FormGroup>
-        <Link to="/dashboard">
-                <Button color="primary" style={{ float: "right" }} disabled={this.state.emailInvalid || this.state.passwordInvalid || this.state.confirmPasswordInvalid || this.state.email === '' || this.state.password === '' || this.state.confirmPassword === '' || this.state.firstName === '' || this.state.lastName === ''}>
+                <Button  type='submit' color="primary" style={{ float: "right" }} disabled={this.state.emailInvalid || this.state.passwordInvalid || this.state.confirmPasswordInvalid || this.state.email === '' || this.state.password === '' || this.state.confirmPassword === '' || this.state.firstName === '' || this.state.lastName === ''}>
                   Create Account
                 </Button>
-                </Link>
               </Form>
             </CardBody>
           </Card>

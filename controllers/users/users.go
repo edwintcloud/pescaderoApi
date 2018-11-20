@@ -1,6 +1,7 @@
 package users
 
 import (
+	"errors"
 	"fmt"
 	"pescaderoApi/models/user"
 	"pescaderoApi/utils/db"
@@ -31,102 +32,140 @@ func Register(e *gin.Engine) {
 	//routes
 	e.GET("/users", c.getUsers)
 	e.POST("/users", c.createUser)
-	e.PUT("/users", c.updateUser)
-	e.DELETE("/users", c.deleteUser)
+	// e.PUT("/users", c.updateUser)
+	// e.DELETE("/users", c.deleteUser)
+	e.POST("/users/login", c.loginUser)
 
 }
 
 // FIND Users BY QUERY OR LIST ALL
 func (*usersController) getUsers(c *gin.Context) {
-
+	var err error
 	users := []user.User{}
+
+	// make query params into a map string:string
 	filter := make(map[string]string)
 	for k, v := range c.Request.URL.Query() {
 		filter[k] = v[0]
 	}
 
-	if id, exists := filter["_id"]; exists {
-		if bson.IsObjectIdHex(id) {
-			if err := d.FindId(bson.ObjectIdHex(id)).All(&users); err == nil {
-				c.JSON(200, users)
-				return
-			}
+	// find by id if id is a query param, otherwise find all that match query params
+	if id, exists := filter["id"]; exists {
+		if !bson.IsObjectIdHex(id) {
+			err = errors.New("not a valid ObjectId")
+		}
+		if err == nil {
+			err = d.FindId(bson.ObjectIdHex(id)).All(&users)
 		}
 	} else {
-		if err := d.Find(filter).All(&users); err == nil {
-			c.JSON(200, users)
-			return
-		}
+		err = d.Find(filter).All(&users)
 	}
 
-	c.JSON(400, gin.H{
-		"error": "Bad request - Unable to find users",
-	})
-
+	// return results
+	if err != nil {
+		c.JSON(200, gin.H{
+			"error": err.Error(),
+		})
+	} else {
+		switch len(users) {
+		case 0:
+			c.JSON(200, gin.H{
+				"message": "no users found",
+			})
+		case 1:
+			c.JSON(200, users[0])
+		default:
+			c.JSON(200, users)
+		}
+	}
 }
 
 // CREATE ONE
 func (*usersController) createUser(c *gin.Context) {
-	user := user.User{}
+	var err error
+	reqUser := user.User{}
 
-	if err := c.ShouldBindJSON(&user); err == nil {
-		if user.CheckValid(&user) == nil {
-			if err := d.Insert(user.HashPassword(&user)); err == nil {
-				c.JSON(200, gin.H{
-					"message": fmt.Sprintf("User %s added to database!", user.FirstName),
-				})
-				return
-			}
-			c.JSON(200, gin.H{
-				"error": "Email already registered!",
-			})
-			return
-		}
+	// bind req body to user struct, validate fields, and hash password
+	err = c.ShouldBindJSON(&reqUser)
+	if err == nil {
+		err = reqUser.CheckValid()
+	}
+	if err == nil {
+		err = d.Insert(reqUser.HashPassword())
+	}
+
+	// return results
+	if err != nil {
 		c.JSON(200, gin.H{
-			"error": "Validation error!",
+			"error": err.Error(),
 		})
-		return
+	} else {
+		c.JSON(200, gin.H{
+			"message": fmt.Sprintf("user %s added to database", reqUser.FirstName),
+		})
 	}
-
-	c.JSON(400, gin.H{
-		"error": "Bad Request - Unable to create new User!",
-	})
 }
 
-// UPDATE User BY ID QUERY
-func (*usersController) updateUser(c *gin.Context) {
-	if id := c.Query("_id"); id != "" && bson.IsObjectIdHex(id) {
-		user := user.User{}
+// // UPDATE User BY ID QUERY
+// func (*usersController) updateUser(c *gin.Context) {
+// 	if id := c.Query("_id"); id != "" && bson.IsObjectIdHex(id) {
+// 		user := user.User{}
 
-		if c.ShouldBindJSON(&user) == nil {
-			if user.CheckValid(&user) == nil {
-				if err := d.UpdateId(bson.ObjectIdHex(id), user.HashPassword(&user)); err == nil {
-					c.JSON(200, gin.H{
-						"message": fmt.Sprintf("User %s successfully updated!", user.FirstName),
-					})
-					return
-				}
-			}
-		}
+// 		if c.ShouldBindJSON(&user) == nil {
+// 			if user.CheckValid(&user) == nil {
+// 				if err := d.UpdateId(bson.ObjectIdHex(id), user.HashPassword(&user)); err == nil {
+// 					c.JSON(200, gin.H{
+// 						"message": fmt.Sprintf("User %s successfully updated!", user.FirstName),
+// 					})
+// 					return
+// 				}
+// 			}
+// 		}
+// 	}
+
+// 	c.JSON(400, gin.H{
+// 		"error": "Bad request - Unable to update user!",
+// 	})
+// }
+
+// // DELETE User BY ID QUERY
+// func (*usersController) deleteUser(c *gin.Context) {
+// 	if id := c.Query("_id"); id != "" && bson.IsObjectIdHex(id) {
+// 		if d.RemoveId(bson.ObjectIdHex(id)) == nil {
+// 			c.JSON(200, gin.H{
+// 				"message": fmt.Sprintf("User with _id %s successfully deleted!", id),
+// 			})
+// 			return
+// 		}
+// 	}
+
+// 	c.JSON(400, gin.H{
+// 		"error": "Bad request - Unable to delete User!",
+// 	})
+// }
+
+// login a user
+func (*usersController) loginUser(c *gin.Context) {
+	var err error
+	reqUser, foundUser := user.User{}, user.User{}
+
+	// bind req body to user struct, find user, compare passwords
+	err = c.ShouldBindJSON(&reqUser)
+	if err == nil {
+		err = d.Find(bson.M{"email": &reqUser.Email}).One(&foundUser)
+	}
+	if err == nil {
+		err = reqUser.ComparePasswords(foundUser)
 	}
 
-	c.JSON(400, gin.H{
-		"error": "Bad request - Unable to update user!",
-	})
-}
-
-// DELETE User BY ID QUERY
-func (*usersController) deleteUser(c *gin.Context) {
-	if id := c.Query("_id"); id != "" && bson.IsObjectIdHex(id) {
-		if d.RemoveId(bson.ObjectIdHex(id)) == nil {
-			c.JSON(200, gin.H{
-				"message": fmt.Sprintf("User with _id %s successfully deleted!", id),
-			})
-			return
-		}
+	// return results
+	if err != nil {
+		c.JSON(200, gin.H{
+			"error": err.Error(),
+		})
+	} else {
+		c.JSON(200, gin.H{
+			"message": "login success",
+		})
 	}
-
-	c.JSON(400, gin.H{
-		"error": "Bad request - Unable to delete User!",
-	})
 }

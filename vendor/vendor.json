@@ -3,6 +3,12 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "6zEk6Kw7zTOY/Q36fBQpc7y3ico=",
+			"path": "github.com/appleboy/gin-jwt",
+			"revision": "475d8d97c2199a0f89a1e95e42fcdf92a357a037",
+			"revisionTime": "2018-10-16T01:15:25Z"
+		},
+		{
 			"checksumSHA1": "nYJ4C35LkSdSeAnBscc7QlrTAlc=",
 			"path": "github.com/campoy/embedmd",
 			"revision": "c59ce00e02967db5e93d897330142a3ef6145786",
@@ -25,6 +31,12 @@
 			"path": "github.com/client9/misspell/cmd/misspell",
 			"revision": "c0b55c8239520f6b5aa15a0207ca8b28027ba49e",
 			"revisionTime": "2018-03-09T02:03:25Z"
+		},
+		{
+			"checksumSHA1": "blOHP3HPYU+IeV6yWCalQuuM+zE=",
+			"path": "github.com/dgrijalva/jwt-go",
+			"revision": "3af4c746e1c248ee8491a3e0c6f7a9cd831e95f8",
+			"revisionTime": "2018-09-21T17:23:15Z"
 		},
 		{
 			"checksumSHA1": "EK/vbAxOP4lny0hswpcES9Mw62w=",

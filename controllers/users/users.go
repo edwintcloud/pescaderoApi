@@ -24,8 +24,9 @@ func Register(e *gin.Engine) {
 
 	// ensure the email field is indexed as unique
 	index := mgo.Index{
-		Key:    []string{"email"},
-		Unique: true,
+		Key:      []string{"email"},
+		Unique:   true,
+		DropDups: true, // delete duplicate documents in case they somehow get put in
 	}
 	d.EnsureIndex(index)
 

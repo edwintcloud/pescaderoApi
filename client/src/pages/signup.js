@@ -64,7 +64,7 @@ class SignUp extends Component {
   handleSubmit(e) {
     e.preventDefault();
     axios
-      .post("http://localhost:5000/users", this.state)
+      .post("http://localhost:5000/users", this.state, { withCredentials: true })
       .then(res => {
         if ("error" in res.data) {
           this.setState({ emailInvalid: true });

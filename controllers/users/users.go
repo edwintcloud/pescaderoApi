@@ -97,6 +97,7 @@ func (*usersController) createUser(c *gin.Context) {
 		err = reqUser.CheckValid()
 	}
 	if err == nil {
+		reqUser.ID = bson.NewObjectId() // needed to set an object id in session
 		err = d.Insert(reqUser.HashPassword())
 	}
 
@@ -106,7 +107,7 @@ func (*usersController) createUser(c *gin.Context) {
 			"error": err.Error(),
 		})
 	} else {
-		// set session
+		// log user in
 		session := sessions.Default(c)
 		// set password to empty so we don't expose it
 		reqUser.Password = ""

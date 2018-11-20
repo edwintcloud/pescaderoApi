@@ -7,6 +7,7 @@ import (
 	"pescaderoApi/controllers/cities"
 	"pescaderoApi/controllers/issues"
 	"pescaderoApi/controllers/users"
+	"time"
 
 	"pescaderoApi/utils/db"
 
@@ -35,9 +36,17 @@ func main() {
 	e := gin.Default()
 
 	// setup CORS
-	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:3000"}
-	e.Use(cors.New(config))
+	e.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowMethods:     []string{"POST", "GET", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Origin", "Content-Type"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		AllowOriginFunc: func(origin string) bool {
+			return origin == "http://localhost:5000"
+		},
+		MaxAge: 12 * time.Hour,
+	}))
 
 	// Serve frontend static files
 	// e.Use(static.Serve("/", static.LocalFile("./client/build", true)))

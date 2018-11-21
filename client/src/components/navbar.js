@@ -11,6 +11,7 @@ import {
   DropdownItem } from 'reactstrap';
   import axios from 'axios';
   import { Link } from 'react-router-dom';
+  import { removeCookie } from 'tiny-cookie';
 
 class NavbarComponent extends Component {
   constructor(props) {
@@ -24,11 +25,10 @@ class NavbarComponent extends Component {
     // get current logged in user
     axios.get("http://localhost:5000/users/current", { withCredentials: true }).then(res => {
       if(res.data.hasOwnProperty("_id")) {
-        this.setState({user:res.data})
+        this.setState({user:res.data});
       } else {
         window.location = '/';
       }
-      console.log(res.data)
     }).catch(err => {
       window.location = '/';
     })
@@ -36,8 +36,10 @@ class NavbarComponent extends Component {
 
   logout() {
     axios.post("http://localhost:5000/users/logout", { withCredentials: true }).then(res => {
+      removeCookie("session");
       window.location = "/";
     }).catch(err => {
+      removeCookie("session");
       window.location = '/';
     })
   }

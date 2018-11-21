@@ -196,8 +196,9 @@ func (*usersController) loginUser(c *gin.Context) {
 // logout a user
 func (*usersController) logoutUser(c *gin.Context) {
 	session := sessions.Default(c)
-	session.Set("user", nil)
+	session.Set("user", "")
 	session.Save()
+	session.Clear()
 
 	c.JSON(200, gin.H{
 		"message": "logout success",

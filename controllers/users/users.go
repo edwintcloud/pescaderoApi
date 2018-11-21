@@ -162,7 +162,7 @@ func (*usersController) createUser(c *gin.Context) {
 // login a user
 func (*usersController) loginUser(c *gin.Context) {
 	var err error
-	reqUser, foundUser := user.User{}, user.User{}
+	reqUser, foundUser := user.Login{}, user.User{}
 
 	// bind req body to user struct, find user, compare passwords
 	err = c.ShouldBindJSON(&reqUser)

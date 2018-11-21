@@ -17,7 +17,9 @@ class Index extends Component {
         <p className="lead mb-0">Changing the world, one small act of kindness at a time.</p>
         <hr className="my-2 mb-3" style={{width:'300px'}}/>
         <p className="lead">
+        <Link to="/login">
           <Button color="primary mr-2 px-5">Log In</Button>
+          </Link>
           <Link to="/signup">
           <Button color="primary px-5">Sign Up</Button>
           </Link>

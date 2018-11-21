@@ -19,6 +19,12 @@ type User struct {
 	City      bson.ObjectId `bson:"city,omitempty" json:"city,omitempty"`
 }
 
+// Login model
+type Login struct {
+	Email    string `bson:"email" json:"email" binding:"required"`
+	Password string `bson:"password" json:"password" binding:"required"`
+}
+
 // HashPassword hashes user password and returns user
 func (u User) HashPassword() User {
 
@@ -30,7 +36,7 @@ func (u User) HashPassword() User {
 }
 
 // ComparePasswords compares a userFound password(hash) to a userReq password(string)
-func (u User) ComparePasswords(uF User) error {
+func (u Login) ComparePasswords(uF User) error {
 	// make sure userFound is not empty first
 	if len(uF.Email) == 0 {
 		return errors.New("user not found")

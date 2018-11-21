@@ -57,7 +57,7 @@ class Login extends Component {
       <div>
         <h1 className="display-4 mt-3 text-center">Login</h1>
         <Card className="my-3 mx-3 mb-5">
-          <CardBody>
+          <CardBody style={{minWidth:'30vw'}}>
             <Form onSubmit={this.handleSubmit}>
               <FormGroup>
                 <Label for="email">Email</Label>

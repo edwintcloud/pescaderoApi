@@ -16,9 +16,27 @@ import {
 class NavbarComponent extends Component {
   constructor(props) {
     super(props)
+    this.toggle = this.toggle.bind(this);
+    this.onMouseEnter = this.onMouseEnter.bind(this);
+    this.onMouseLeave = this.onMouseLeave.bind(this);
     this.state = {
-      user : ''
+      user : '',
+      dropdownOpen: false
     }
+  }
+
+  toggle() {
+    this.setState(prevState => ({
+      dropdownOpen: !prevState.dropdownOpen
+    }));
+  }
+
+  onMouseEnter() {
+    this.setState({dropdownOpen: true});
+  }
+
+  onMouseLeave() {
+    this.setState({dropdownOpen: false});
   }
 
   componentWillMount(){
@@ -60,7 +78,7 @@ class NavbarComponent extends Component {
             <NavLink>Create Issue</NavLink>
             </Link>
           </NavItem>
-          <UncontrolledDropdown nav inNavbar>
+          <UncontrolledDropdown nav inNavbar onMouseOver={this.onMouseEnter} onMouseLeave={this.onMouseLeave} isOpen={this.state.dropdownOpen} toggle={this.toggle}>
             <DropdownToggle nav caret>
               {this.state.user.firstName}
             </DropdownToggle>

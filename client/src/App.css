@@ -38,6 +38,9 @@
 
 .map_container {
   grid-area: m;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: 57px; 
 }
 
 .issues_container {
@@ -267,7 +270,9 @@
   background-color: rgb(0, 94, 209);
 }
 
-
+.nav-link {
+  color: black!important;
+}
 
 @media (max-width: 700px) {
   .container {

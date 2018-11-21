@@ -4,10 +4,10 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-  NavLink,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
+  Button,
   DropdownItem } from 'reactstrap';
   import axios from 'axios';
   import { Link } from 'react-router-dom';
@@ -65,17 +65,17 @@ class NavbarComponent extends Component {
   render() {
 
     return (
-        <Navbar color="light" light expand="md">
+        <Navbar style={{backgroundColor:'#fff', boxShadow:'0px -1px 20px 1px rgba(0,0,0,0.75)', zIndex:'100'}} fixed="top" expand="sm">
       <NavbarBrand href="/"></NavbarBrand>
         <Nav className="ml-auto" navbar>
           <NavItem>
-          <Link to="/dashboard">
-            <NavLink>Dashboard</NavLink>
+          <Link to="/">
+          <Button color="secondary">Dashboard</Button>
             </Link>
           </NavItem>
           <NavItem>
-          <Link to="/dashboard/create-issue">
-            <NavLink>Create Issue</NavLink>
+          <Link to="/create-issue">
+          <Button color="primary" className="mx-2 mr-5">Create Issue</Button>
             </Link>
           </NavItem>
           <UncontrolledDropdown nav inNavbar onMouseOver={this.onMouseEnter} onMouseLeave={this.onMouseLeave} isOpen={this.state.dropdownOpen} toggle={this.toggle}>

@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import Issues from '../components/issues';
 import Sidebar from '../components/sidebar';
-import Dashboard from'./dashboard';
 
 class DashboardHome extends Component {
   render() {
     return (
-      <Dashboard>
+      <div className="dashboard_container">
         <Issues></Issues>
         <Sidebar></Sidebar>
-      </Dashboard>
+      </div>
     )
   }
 }

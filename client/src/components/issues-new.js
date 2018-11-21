@@ -9,7 +9,7 @@ class NewIssue extends Component {
   render() {
     return (
       <div className="new_issue_container">
-        <div className="new_issue_header">Open a <span style={{color:'red'}}>Issue</span></div>
+        <div className="new_issue_header">Open an <span style={{color:'red'}}>Issue</span></div>
         <div className="issues_card">
           <div className="issue">
             <div className="issue_box">

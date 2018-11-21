@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import NewIssue from '../components/issues-new';
-import Dashboard from './dashboard';
 
 class CreateIssue extends Component {
   render() {
     return (
-      <Dashboard>
+        <div className="dashboard_container">
         <NewIssue></NewIssue>
-      </Dashboard>
+        </div>
     )
   }
 }

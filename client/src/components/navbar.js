@@ -12,15 +12,16 @@ import {
   import axios from 'axios';
   import { Link } from 'react-router-dom';
   import { removeCookie } from 'tiny-cookie';
+  import { connect } from "react-redux";
 
 class NavbarComponent extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.toggle = this.toggle.bind(this);
     this.onMouseEnter = this.onMouseEnter.bind(this);
     this.onMouseLeave = this.onMouseLeave.bind(this);
     this.state = {
-      user : '',
+      user : this.props.user,
       dropdownOpen: false
     }
   }
@@ -39,26 +40,13 @@ class NavbarComponent extends Component {
     this.setState({dropdownOpen: false});
   }
 
-  componentWillMount(){
-    // get current logged in user
-    axios.get("/api/users/current", { withCredentials: true }).then(res => {
-      if(res.data.hasOwnProperty("_id")) {
-        this.setState({user:res.data});
-      } else {
-        window.location = '/';
-      }
-    }).catch(err => {
-      window.location = '/';
-    })
-  }
-
   logout() {
     axios.post("/api/users/logout", { withCredentials: true }).then(res => {
       removeCookie("session");
       window.location = "/";
     }).catch(err => {
       removeCookie("session");
-      window.location = '/';
+      window.location = "/";
     })
   }
 
@@ -98,4 +86,14 @@ class NavbarComponent extends Component {
   }
 }
 
-export default NavbarComponent
+const mapStateToProps = state => {
+  return {
+    user: state.user,
+    hasErrored: state.usersHasErrored,
+    isLoading: state.usersIsLoading
+  };
+};
+
+export default connect(
+  mapStateToProps
+)(NavbarComponent);

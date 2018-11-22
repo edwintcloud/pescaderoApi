@@ -32,7 +32,7 @@ func Register(e *gin.Engine) {
 	d.EnsureIndex(index)
 
 	//routes
-	routes := e.Group("/users")
+	routes := e.Group("/api/users")
 	{
 		routes.GET("", c.getUsers)
 		routes.POST("", c.createUser)

@@ -23,10 +23,13 @@ func Register(e *gin.Engine) {
 	d = db.DB.C("cities")
 
 	// routes
-	e.GET("/cities", c.getCities)
-	e.POST("/cities", c.createCity)
-	e.PUT("/cities", c.updateCity)
-	e.DELETE("/cities", c.deleteCity)
+	routes := e.Group("/api")
+	{
+		routes.GET("/cities", c.getCities)
+		routes.POST("/cities", c.createCity)
+		routes.PUT("/cities", c.updateCity)
+		routes.DELETE("/cities", c.deleteCity)
+	}
 }
 
 // FIND CITIES BY QUERY OR LIST ALL

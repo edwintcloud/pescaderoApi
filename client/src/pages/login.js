@@ -34,7 +34,7 @@ class Login extends Component {
   handleSubmit(e) {
     e.preventDefault();
     axios
-      .post("http://localhost:5000/users/login", this.state, { withCredentials: true })
+      .post("/api/users/login", this.state, { withCredentials: true })
       .then(res => {
         if (res.data.hasOwnProperty("error")) {
           console.log(res.data.error)

@@ -64,7 +64,7 @@ class SignUp extends Component {
   handleSubmit(e) {
     e.preventDefault();
     axios
-      .post("http://localhost:5000/users", this.state, { withCredentials: true })
+      .post("/api/users", this.state, { withCredentials: true })
       .then(res => {
         if ("error" in res.data) {
           this.setState({ emailInvalid: true });
@@ -82,7 +82,7 @@ class SignUp extends Component {
 
   componentDidMount() {
     const cities = document.querySelector("[name='city']");
-    axios.get("http://localhost:5000/cities").then(res => {
+    axios.get("/api/cities").then(res => {
       for(var i = 0;i < res.data.length;i++) {
         const option = document.createElement("option");
         option.value = res.data[i]._id.toString();

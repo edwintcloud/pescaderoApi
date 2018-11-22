@@ -41,7 +41,7 @@ class NavbarComponent extends Component {
 
   componentWillMount(){
     // get current logged in user
-    axios.get("http://localhost:5000/users/current", { withCredentials: true }).then(res => {
+    axios.get("/api/users/current", { withCredentials: true }).then(res => {
       if(res.data.hasOwnProperty("_id")) {
         this.setState({user:res.data});
       } else {
@@ -53,7 +53,7 @@ class NavbarComponent extends Component {
   }
 
   logout() {
-    axios.post("http://localhost:5000/users/logout", { withCredentials: true }).then(res => {
+    axios.post("/api/users/logout", { withCredentials: true }).then(res => {
       removeCookie("session");
       window.location = "/";
     }).catch(err => {

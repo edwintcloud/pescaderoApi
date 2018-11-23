@@ -1,11 +1,12 @@
-import React, { Component } from 'react'
-import { compose, withProps } from 'recompose'
+import React, { Component } from 'react';
+import { compose, withProps } from 'recompose';
 import {
   withScriptjs,
   withGoogleMap,
   GoogleMap,
   Marker,
-} from 'react-google-maps'
+} from 'react-google-maps';
+import IssueIcon from '../assets/images/warning-sign.png';
 
 const Map = compose(
   withProps({
@@ -21,6 +22,7 @@ const Map = compose(
   <GoogleMap
     zoom={props.zoom}
     center={{ lat: props.currentLocation.lat, lng: props.currentLocation.lng }}
+    onClick={(c) => props.addMarker(c.latLng)}
   >
     {props.isMarkerShown && (
       <Marker
@@ -30,6 +32,16 @@ const Map = compose(
         }}
       />
     )}
+    {
+      props.markers.map(marker => <Marker
+        position={{
+          lat: marker.lat,
+          lng: marker.lng,
+        }}
+        icon={{url:IssueIcon, scaledSize: new window.google.maps.Size(40,40)}}
+        title={marker.title}
+        />)
+    }
   </GoogleMap>
 ))
 
@@ -43,6 +55,23 @@ class MapComponent extends Component {
       },
       isMarkerShown: false,
       zoom: 13,
+      markers: [
+        {
+          lat: 37.787,
+          lng: -122.41095,
+          title: "issue 1"
+        },
+        {
+          lat: 37.7871,
+          lng: -122.41096,
+          title: "issue 2"
+        },
+        {
+          lat: 37.7872,
+          lng: -122.41097,
+          title: "issue 3"
+        },
+      ]
     }
   }
 
@@ -66,6 +95,16 @@ class MapComponent extends Component {
     this.showCurrentLocation()
   }
 
+  addMarker = (location) => {
+    const marker = {
+      lat: location.lat(),
+      lng: location.lng()
+    }
+    this.setState(prevState => ({
+      markers: [...prevState.markers, marker]
+    }));
+  }
+
   render() {
     if(navigator.onLine) {
       return (
@@ -74,6 +113,8 @@ class MapComponent extends Component {
             isMarkerShown={this.state.isMarkerShown}
             currentLocation={this.state.currentLatLng}
             zoom={this.state.zoom}
+            markers={this.state.markers}
+            addMarker={this.addMarker}
           />
         </div>
       )

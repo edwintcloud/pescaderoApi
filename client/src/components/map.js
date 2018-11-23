@@ -11,7 +11,7 @@ import IssueIcon from '../assets/images/warning-sign.png';
 const Map = compose(
   withProps({
     googleMapURL:
-      'https://maps.googleapis.com/maps/api/js?key=AIzaSyDDwrgWKkdd5dT7ftnPaccBM6zgRb5R90g',
+      `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`,
     loadingElement: <div style={{ height: `100%` }} />,
     containerElement: <div style={{ height: `46vh` }} />,
     mapElement: <div style={{ height: `100%` }} />,

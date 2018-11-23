@@ -67,15 +67,25 @@ class MapComponent extends Component {
   }
 
   render() {
-    return (
-      <div className='map_container'>
-        <Map
-          isMarkerShown={this.state.isMarkerShown}
-          currentLocation={this.state.currentLatLng}
-          zoom={this.state.zoom}
-        />
-      </div>
-    )
+    if(navigator.onLine) {
+      return (
+        <div className='map_container'>
+          <Map
+            isMarkerShown={this.state.isMarkerShown}
+            currentLocation={this.state.currentLatLng}
+            zoom={this.state.zoom}
+          />
+        </div>
+      )
+    } else {
+      return (
+        <div style={{marginTop:'77px', padding:'20px', height:'35vh', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'3em', flexDirection:'column', textAlign:'center'}}>
+        <p><span role="img" aria-label="jsx-a11y/accessible-emoji">😱</span></p>
+        <p style={{fontSize:'20px'}}>Oh nooo... did you pay your internet bill? No mas google maps.</p>
+        </div>
+      )
+    }
+    
   }
 }
 

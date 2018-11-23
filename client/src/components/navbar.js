@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {
   Navbar,
-  NavbarBrand,
   Nav,
   NavItem,
   UncontrolledDropdown,
@@ -54,7 +53,6 @@ class NavbarComponent extends Component {
 
     return (
         <Navbar style={{backgroundColor:'#fff', boxShadow:'0px -1px 20px 1px rgba(0,0,0,0.75)', zIndex:'100'}} fixed="top" expand="sm">
-      <NavbarBrand href="/"></NavbarBrand>
         <Nav className="ml-auto" navbar>
           <NavItem>
           <Link to="/">

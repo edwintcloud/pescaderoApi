@@ -275,11 +275,35 @@
 }
 
 @media (max-width: 700px) {
-  .container {
+  .dashboard_container {
     grid-template-areas: "m m m"
                          "i i i"
                          "s s s"
                          "f f f";
     font-size: .8em;
+    margin-bottom: 57px;
+  }
+  
+  .navbar-nav {
+    flex-direction: row;
+    align-items: center;
+    margin-left: 0!important;
+  }
+
+  .dropdown-item {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .dropdown-menu {
+    min-width: 0;
+  }
+
+  .navbar-nav .btn {
+    padding: 2px;
+  }
+
+  .navbar-nav .btn-primary {
+    margin-right: 15px!important;
   }
 }

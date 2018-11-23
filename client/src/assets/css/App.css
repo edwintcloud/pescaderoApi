@@ -43,6 +43,19 @@
   margin-top: 57px; 
 }
 
+.no_mas_maps {
+  padding: 20px;
+  height: 46vh;
+  margin-top: 57px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3em;
+  flex-direction: column;
+  text-align: center;
+
+}
+
 .issues_container {
   grid-area: i;
   display: flex;

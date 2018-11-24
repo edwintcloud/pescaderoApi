@@ -1,46 +1,32 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 import {
-  Navbar,
-  Nav,
-  NavItem,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  Button,
-  DropdownItem } from 'reactstrap';
-  import {
-    Container,
-    Divider,
-    Dropdown,
-    Grid,
-    Header,
-    Image,
-    List,
-    Menu,
-    Segment,
-    Icon
-  } from 'semantic-ui-react'
-  import axios from 'axios';
-  import { Link } from 'react-router-dom';
-  import { removeCookie } from 'tiny-cookie';
-  import { connect } from "react-redux";
-  import IssueIcon from "../assets/images/warning-sign.png";
+  Dropdown,
+  Image,
+  Menu,
+} from "semantic-ui-react";
+import axios from "axios";
+import { removeCookie } from "tiny-cookie";
+import { connect } from "react-redux";
+import IssueIcon from "../assets/images/warning-sign.png";
 
 class NavbarComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user : this.props.user
-    }
+      user: this.props.user
+    };
   }
   logout() {
-    axios.post("/api/users/logout", { withCredentials: true }).then(res => {
-      removeCookie("session");
-      window.location = "/";
-    }).catch(err => {
-      removeCookie("session");
-      window.location = "/";
-    })
+    axios
+      .post("/api/users/logout", { withCredentials: true })
+      .then(res => {
+        removeCookie("session");
+        window.location = "/";
+      })
+      .catch(err => {
+        removeCookie("session");
+        window.location = "/";
+      });
   }
 
   render() {
@@ -48,36 +34,43 @@ class NavbarComponent extends Component {
       <span>
         <Image avatar src="https://via.placeholder.com/100" />
       </span>
-    )
+    );
 
     return (
-      <Menu secondary fixed='top' style={{boxShadow:'0px 0px 20px .3px rgba(0,0,0,0.6)'}}>
-        <Menu.Item as='a' header>
-          <Image size='mini' src={IssueIcon} className='mr-3' />
+      <Menu
+        secondary
+        fixed="top"
+        style={{ boxShadow: "0px 0px 20px .3px rgba(0,0,0,0.6)" }}
+      >
+        <Menu.Item as="a" header>
+          <Image size="mini" src={IssueIcon} className="mr-3" />
           Project Pescadero
         </Menu.Item>
         <Menu.Menu>
-        <div className='ui right aligned category search item'>
-          <div className='ui transparent icon input'>
-            <input className='prompt' type='text' placeholder='Search issues...' />
-            <i className='search link icon' />
+          <div className="ui right aligned category search item">
+            <div className="ui transparent icon input">
+              <input
+                className="prompt"
+                type="text"
+                placeholder="Search issues..."
+              />
+              <i className="search link icon" />
+            </div>
+            <div className="results" />
           </div>
-          <div className='results' />
-        </div>
-      </Menu.Menu>
-      <Dropdown item trigger={trigger} simple className='right'>
-        <Dropdown.Menu>
-        <Dropdown.Header>{this.props.user.firstName}</Dropdown.Header>
-        <Dropdown.Divider />
-          <Dropdown.Header>Issues Opened: 15</Dropdown.Header>
-          <Dropdown.Header>Issues Resolved: 4</Dropdown.Header>
-          <Dropdown.Divider />
-          <Dropdown.Item onClick={this.logout}>Logout</Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
-    </Menu>
-
-    )
+        </Menu.Menu>
+        <Dropdown item trigger={trigger} simple className="right">
+          <Dropdown.Menu>
+            <Dropdown.Header>{this.props.user.firstName}</Dropdown.Header>
+            <Dropdown.Divider />
+            <Dropdown.Header>Issues Opened: 15</Dropdown.Header>
+            <Dropdown.Header>Issues Resolved: 4</Dropdown.Header>
+            <Dropdown.Divider />
+            <Dropdown.Item onClick={this.logout}>Logout</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </Menu>
+    );
   }
 }
 
@@ -89,6 +82,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps
-)(NavbarComponent);
+export default connect(mapStateToProps)(NavbarComponent);

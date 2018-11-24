@@ -64,7 +64,7 @@ class Issues extends Component {
           </Card.Content>
           <Card.Content extra>
             <div className='ui buttons right floated'>
-            {issue.author._id == this.props.user._id &&
+            {issue.author._id === this.props.user._id &&
             <Button animated='vertical' negative>
               <Button.Content hidden>Delete</Button.Content>
               <Button.Content visible>
@@ -72,7 +72,7 @@ class Issues extends Component {
               </Button.Content>
             </Button>
             }
-            {issue.author._id == this.props.user._id &&
+            {issue.author._id === this.props.user._id &&
             <Button animated='vertical' primary>
             <Button.Content hidden>Edit</Button.Content>
             <Button.Content visible>

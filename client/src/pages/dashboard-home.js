@@ -5,9 +5,8 @@ import Sidebar from '../components/sidebar';
 class DashboardHome extends Component {
   render() {
     return (
-      <div className="dashboard_container">
+      <div>
         <Issues></Issues>
-        <Sidebar></Sidebar>
       </div>
     )
   }

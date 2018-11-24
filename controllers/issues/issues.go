@@ -37,6 +37,7 @@ func Register(e *gin.Engine) {
 func (*issuesController) getIssues(c *gin.Context) {
 	var err error
 	issues := []issue.Issue{}
+	result := []issue.Result{}
 
 	// make query params into a map string:string
 	filter := make(map[string]string)
@@ -53,7 +54,32 @@ func (*issuesController) getIssues(c *gin.Context) {
 			err = d.FindId(bson.ObjectIdHex(id)).All(&issues)
 		}
 	} else {
-		err = d.Find(filter).All(&issues)
+		err = d.Pipe([]bson.M{
+			{"$match": filter},
+			{"$lookup": bson.M{
+				"from":         "users",
+				"localField":   "author",
+				"foreignField": "_id",
+				"as":           "author",
+			}},
+			{"$lookup": bson.M{
+				"from":         "cities",
+				"localField":   "city",
+				"foreignField": "_id",
+				"as":           "city",
+			}},
+			{"$project": bson.M{
+				"title":       1,
+				"description": 1,
+				"location":    1,
+				"author": bson.M{
+					"$arrayElemAt": []interface{}{"$author", 0},
+				},
+				"city": bson.M{
+					"$arrayElemAt": []interface{}{"$city", 0},
+				},
+			}},
+		}).All(&result)
 	}
 
 	// return results
@@ -62,7 +88,11 @@ func (*issuesController) getIssues(c *gin.Context) {
 			"error": err.Error(),
 		})
 	} else {
-		c.JSON(200, issues)
+		if len(result) > len(issues) {
+			c.JSON(200, result)
+		} else {
+			c.JSON(200, issues)
+		}
 	}
 }
 

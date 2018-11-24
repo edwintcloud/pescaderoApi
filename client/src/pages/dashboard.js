@@ -16,7 +16,7 @@ class Dashboard extends Component {
       <BrowserRouter basename="/dashboard">
       <div style={{width:'100%'}}>
         <NavbarComponent />
-      <div>
+      <div className="dashboard_container">
         <Map></Map>
         <Route exact path="/" component={DashboardHome} />
         <Route exact path="/create-issue" component={CreateIssue} />

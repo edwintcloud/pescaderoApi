@@ -12,13 +12,12 @@ type LocationObject struct {
 	Latitude  string `bson:"latitude" json:"latitude" binding:"required"`
 }
 
-
-
 // Issue model
 type Issue struct {
 	ID          bson.ObjectId  `json:"_id,omitempty" bson:"_id,omitempty"`
 	Title       string         `bson:"title" json:"title" binding:"required"`
 	Description string         `bson:"description" json:"description" binding:"required"`
+	Resolved    bool           `json:"resolved" bson:"resolved" binding:"required"`
 	Author      bson.ObjectId  `json:"author,omitempty" bson:"author,omitempty"`
 	ResolvedBy  bson.ObjectId  `json:"resolvedBy,omitempty" bson:"resolvedBy,omitempty"`
 	City        bson.ObjectId  `json:"city,omitempty" bson:"city,omitempty"`

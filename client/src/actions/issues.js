@@ -35,11 +35,11 @@ export function addIssueSuccess(issue) {
 }
 
 // actions
-export function getIssues() {
+export function getIssues(url) {
   return dispatch => {
     dispatch(issuesIsLoading(true));
 
-    fetch(`/api/issues`)
+    fetch(url)
       .then(response => {
         if (!response.ok) {
           throw Error(response.statusText);

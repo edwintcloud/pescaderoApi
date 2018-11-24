@@ -73,16 +73,7 @@ func (*usersController) getUsers(c *gin.Context) {
 			"error": err.Error(),
 		})
 	} else {
-		switch len(users) {
-		case 0:
-			c.JSON(200, gin.H{
-				"message": "no users found",
-			})
-		case 1:
-			c.JSON(200, users[0])
-		default:
-			c.JSON(200, users)
-		}
+		c.JSON(200, users)
 	}
 }
 

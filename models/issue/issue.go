@@ -14,13 +14,13 @@ type LocationObject struct {
 
 // Issue model
 type Issue struct {
-	ID          bson.ObjectId  `json:"_id,omitempty" bson:"_id,omitempty"`
-	Title       string         `bson:"title" json:"title" binding:"required"`
-	Description string         `bson:"description" json:"description" binding:"required"`
-	Author      bson.ObjectId  `json:"author" bson:"author" binding:"required"`
-	ResolvedBy  bson.ObjectId  `json:"resolvedBy,omitempty" bson:"resolvedBy,omitempty"`
-	City        bson.ObjectId  `json:"city" bson:"city" binding:"required"`
-	Location    LocationObject `bson:"location" json:"location" binding:"required"`
+	ID          bson.ObjectId  `json:"_id,omitempty" bson:"_id,omitempty" structs:"_id"`
+	Title       string         `bson:"title" json:"title" binding:"required" structs:"title"`
+	Description string         `bson:"description" json:"description" binding:"required" structs:"description"`
+	Author      bson.ObjectId  `json:"author" bson:"author" binding:"required" structs:"author"`
+	ResolvedBy  bson.ObjectId  `json:"resolvedBy,omitempty" bson:"resolvedBy,omitempty" structs:"resolvedBy"`
+	City        bson.ObjectId  `json:"city" bson:"city" binding:"required" structs:"city"`
+	Location    LocationObject `bson:"location" json:"location" binding:"required" structs:"location"`
 }
 
 // CheckValid validates issue model.

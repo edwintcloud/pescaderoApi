@@ -62,16 +62,7 @@ func (*issuesController) getIssues(c *gin.Context) {
 			"error": err.Error(),
 		})
 	} else {
-		switch len(issues) {
-		case 0:
-			c.JSON(200, gin.H{
-				"message": "no issues found",
-			})
-		case 1:
-			c.JSON(200, issues[0])
-		default:
-			c.JSON(200, issues)
-		}
+		c.JSON(200, issues)
 	}
 }
 

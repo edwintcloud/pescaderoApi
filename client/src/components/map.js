@@ -75,7 +75,7 @@ class MapComponent extends Component {
   };
 
   componentDidMount() {
-    this.props.getIssues("/api/issues");
+    this.props.getIssues();
     this.showCurrentLocation();
   }
 

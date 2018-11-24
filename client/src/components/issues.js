@@ -14,6 +14,12 @@ class Issues extends Component {
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
+  handleDeleteIssue(index, issue) {
+    if (window.confirm(`Are you sure you wish to delete issue ${issue.title}?`)) {
+      this.props.removeIssue(index, issue._id)
+    } 
+  }
+
   render() {
     const { activeItem } = this.state
 
@@ -29,11 +35,10 @@ class Issues extends Component {
     }
     return (
       <div className="issues_container">
-        <div>
+        <div style={{marginBottom:"12px"}}>
           <span className='ui huge header mx-3 mr-4'>Issues</span>
           <span className='ui tiny header'>200 Open issues. 4 Resolved.</span>
-        </div>
-        <Menu pointing secondary>
+          <Menu pointing secondary>
           <Menu.Item name='open' active={activeItem === 'open'} onClick={this.handleItemClick} />
           <Menu.Item
             name='resolved'
@@ -51,6 +56,8 @@ class Issues extends Component {
             onClick={this.handleItemClick}
           />
         </Menu>
+        </div>
+        
         <div className="issues ui centered cards pl-2">
         {this.props.issues.map((issue, index) => (
           <Card fluid key={issue._id}>
@@ -65,7 +72,7 @@ class Issues extends Component {
           <Card.Content extra>
             <div className='ui buttons right floated'>
             {issue.author._id === this.props.user._id &&
-            <Button animated='vertical' negative>
+            <Button animated='vertical' negative onClick={() => this.handleDeleteIssue(index, issue)}>
               <Button.Content hidden>Delete</Button.Content>
               <Button.Content visible>
                 <Icon name='trash' />
@@ -104,7 +111,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    removeIssue: index => dispatch(removeIssue(index))
+    removeIssue: (index, id) => dispatch(removeIssue(index, id))
   };
 };
 

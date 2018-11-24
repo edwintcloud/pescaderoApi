@@ -53,11 +53,10 @@
 
 .issues_container {
   grid-area: i;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   height: calc(100vh - 57px);
   background: #fff;
+  display: flex;
+  flex-direction: column;
   padding-top: 15px;
   box-shadow: -3px 0px 10px -5px rgba(0,0,0,0.75);
   z-index: 100;
@@ -65,7 +64,8 @@
 
 .issues {
   overflow-y: auto;
-  padding-bottom: 14px;
+  padding-top: 9px;
+  padding-bottom: 24px;
 }
 
 .sidebar_container {

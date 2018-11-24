@@ -33,6 +33,12 @@
 			"revisionTime": "2017-12-05T05:05:44Z"
 		},
 		{
+			"checksumSHA1": "Ps2Bsd1OjhSmAv4uVA2ZIZx7w7k=",
+			"path": "github.com/fatih/structs",
+			"revision": "878a968ab22548362a09bdb3322f98b00f470d46",
+			"revisionTime": "2018-10-10T23:17:57Z"
+		},
+		{
 			"checksumSHA1": "yNw7LsCcmU4KA4lRdEWEfxnP9pM=",
 			"path": "github.com/gin-contrib/cors",
 			"revision": "488de3ec974f4e37bb0eb426cdee1aa897726300",

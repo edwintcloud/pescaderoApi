@@ -40,7 +40,7 @@ func (*citiesController) getCities(c *gin.Context) {
 		filter[k] = v[0] // fixes query value being a slice of strings
 	}
 
-	if id, exists := filter["_id"]; exists {
+	if id, exists := filter["id"]; exists {
 		if bson.IsObjectIdHex(id) {
 			if err := d.FindId(bson.ObjectIdHex(id)).All(&cities); err == nil {
 				c.JSON(200, cities)
@@ -79,7 +79,7 @@ func (*citiesController) createCity(c *gin.Context) {
 
 // UPDATE CITY BY ID QUERY
 func (*citiesController) updateCity(c *gin.Context) {
-	if id := c.Query("_id"); id != "" && bson.IsObjectIdHex(id) {
+	if id := c.Query("id"); id != "" && bson.IsObjectIdHex(id) {
 		updates := city.City{}
 
 		if c.ShouldBindJSON(&updates) == nil {
@@ -99,7 +99,7 @@ func (*citiesController) updateCity(c *gin.Context) {
 
 // DELETE CITY BY ID QUERY
 func (*citiesController) deleteCity(c *gin.Context) {
-	if id := c.Query("_id"); id != "" && bson.IsObjectIdHex(id) {
+	if id := c.Query("id"); id != "" && bson.IsObjectIdHex(id) {
 		if d.RemoveId(bson.ObjectIdHex(id)) == nil {
 			c.JSON(200, gin.H{
 				"message": fmt.Sprintf("City with _id %s successfully deleted!", id),

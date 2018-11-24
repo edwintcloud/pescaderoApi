@@ -47,7 +47,7 @@ class NavbarComponent extends Component {
           Project Pescadero
         </Menu.Item>
         <Menu.Menu>
-          <div className="ui right aligned category search item">
+          <div className="ui right aligned category search item" style={{width:'25vw'}}>
             <div className="ui transparent icon input">
               <input
                 className="prompt"

@@ -65,6 +65,7 @@
 
 .issues {
   overflow-y: auto;
+  padding-bottom: 14px;
 }
 
 .sidebar_container {

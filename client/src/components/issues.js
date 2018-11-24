@@ -1,12 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getIssues, removeIssue } from "../actions/issues";
+import { removeIssue } from "../actions/issues";
 
 class Issues extends Component {
-  componentDidMount() {
-    this.props.getIssues("/api/issues");
-  }
-
   render() {
     if (this.props.hasErrored) {
       return <p>Sorry! There was an error loading the issues</p>;
@@ -54,7 +50,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getIssues: url => dispatch(getIssues(url)),
     removeIssue: index => dispatch(removeIssue(index))
   };
 };

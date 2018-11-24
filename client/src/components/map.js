@@ -7,6 +7,7 @@ import {
 } from "react-google-maps";
 import IssueIcon from "../assets/images/warning-sign.png";
 import { connect } from 'react-redux';
+import { getIssues, removeIssue } from "../actions/issues";
 
 const Map = withScriptjs(
   withGoogleMap(props => (
@@ -26,18 +27,18 @@ const Map = withScriptjs(
           }}
         />
       )}
-      {props.markers.map(marker => (
+      {props.issues.map(issue => (
         <Marker
           position={{
-            lat: marker.lat,
-            lng: marker.lng
+            lat: Number(issue.location.lat),
+            lng: Number(issue.location.lng)
           }}
           icon={{
             url: IssueIcon,
             scaledSize: new window.google.maps.Size(40, 40)
           }}
-          title={marker.title}
-          key={marker.title}
+          title={issue.title}
+          key={issue._id}
         />
       ))}
     </GoogleMap>
@@ -47,31 +48,13 @@ const Map = withScriptjs(
 class MapComponent extends Component {
   constructor(props) {
     super(props);
-    this.ref = React.createRef();
     this.state = {
       currentLatLng: {
         lat: 37.78768,
         lng: -122.41094
       },
       isMarkerShown: false,
-      zoom: 13,
-      markers: [
-        {
-          lat: 37.787,
-          lng: -122.41095,
-          title: "issue 1"
-        },
-        {
-          lat: 37.7871,
-          lng: -122.41096,
-          title: "issue 2"
-        },
-        {
-          lat: 37.7872,
-          lng: -122.41097,
-          title: "issue 3"
-        }
-      ]
+      zoom: 13
     };
   }
 
@@ -92,6 +75,7 @@ class MapComponent extends Component {
   };
 
   componentDidMount() {
+    this.props.getIssues("/api/issues");
     this.showCurrentLocation();
   }
 
@@ -126,6 +110,7 @@ class MapComponent extends Component {
             containerElement={<div style={{ height: `46vh` }} />}
             mapElement={<div style={{ height: `100%` }} />}
             draggable={false}
+            issues={this.props.issues}
           />
         </div>
       );
@@ -154,4 +139,11 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(MapComponent);
+const mapDispatchToProps = dispatch => {
+  return {
+    getIssues: url => dispatch(getIssues(url)),
+    removeIssue: index => dispatch(removeIssue(index))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MapComponent);

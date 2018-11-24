@@ -30,7 +30,6 @@ export function getIssues(url) {
               }
 
               dispatch(issuesIsLoading(false));
-
               return response;
           })
           .then((response) => response.json())

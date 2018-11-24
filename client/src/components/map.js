@@ -6,6 +6,7 @@ import {
   Marker
 } from "react-google-maps";
 import IssueIcon from "../assets/images/warning-sign.png";
+import { connect } from 'react-redux';
 
 const Map = withScriptjs(
   withGoogleMap(props => (
@@ -36,6 +37,7 @@ const Map = withScriptjs(
             scaledSize: new window.google.maps.Size(40, 40)
           }}
           title={marker.title}
+          key={marker.title}
         />
       ))}
     </GoogleMap>
@@ -138,4 +140,12 @@ class MapComponent extends Component {
   }
 }
 
-export default MapComponent;
+const mapStateToProps = (state) => {
+  return {
+      issues: state.issues,
+      hasErrored: state.itemsHasErrored,
+      isLoading: state.itemsIsLoading
+  };
+};
+
+export default connect(mapStateToProps)(MapComponent);

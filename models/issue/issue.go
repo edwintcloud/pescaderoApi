@@ -11,9 +11,9 @@ type Issue struct {
 	ID          bson.ObjectId `json:"_id,omitempty" bson:"_id,omitempty"`
 	Title       string        `bson:"title" json:"title" binding:"required"`
 	Description string        `bson:"description" json:"description" binding:"required"`
-	Author      bson.ObjectId `json:"author,omitempty" bson:"author,omitempty"`
+	Author      bson.ObjectId `json:"author" bson:"author" binding:"required"`
 	ResolvedBy  bson.ObjectId `json:"resolvedBy,omitempty" bson:"resolvedBy,omitempty"`
-	City        bson.ObjectId `json:"city,omitempty" bson:"city,omitempty"`
+	City        bson.ObjectId `json:"city" bson:"city" binding:"required"`
 }
 
 // CheckValid validates issue model.

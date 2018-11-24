@@ -83,7 +83,7 @@
 .issues_card {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   padding: 10px;
   background-color: #fff;
@@ -178,7 +178,7 @@
 
 .issues_card_profile_pic {
   border-radius: 50%;
-  width: 20vw;
+  max-width: 150px;
   margin-left: 15px;
 }
 
@@ -204,13 +204,16 @@
 .issue {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: flex-end;
+  width: 100%;
+  min-height: 180px;
 }
 
 .issue_box {
-  padding: 15px;
   margin-left: 20px;
+  padding: 15px;
+  align-self:flex-start;
 }
 
 .landing_container {
@@ -318,5 +321,9 @@
 
   .navbar-nav .btn-primary {
     margin-right: 15px!important;
+  }
+
+  .issues_card_profile_pic {
+    max-width: 100px
   }
 }

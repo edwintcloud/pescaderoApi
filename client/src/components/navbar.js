@@ -8,37 +8,31 @@ import {
   DropdownMenu,
   Button,
   DropdownItem } from 'reactstrap';
+  import {
+    Container,
+    Divider,
+    Dropdown,
+    Grid,
+    Header,
+    Image,
+    List,
+    Menu,
+    Segment,
+    Icon
+  } from 'semantic-ui-react'
   import axios from 'axios';
   import { Link } from 'react-router-dom';
   import { removeCookie } from 'tiny-cookie';
   import { connect } from "react-redux";
+  import IssueIcon from "../assets/images/warning-sign.png";
 
 class NavbarComponent extends Component {
   constructor(props) {
     super(props);
-    this.toggle = this.toggle.bind(this);
-    this.onMouseEnter = this.onMouseEnter.bind(this);
-    this.onMouseLeave = this.onMouseLeave.bind(this);
     this.state = {
-      user : this.props.user,
-      dropdownOpen: false
+      user : this.props.user
     }
   }
-
-  toggle() {
-    this.setState(prevState => ({
-      dropdownOpen: !prevState.dropdownOpen
-    }));
-  }
-
-  onMouseEnter() {
-    this.setState({dropdownOpen: true});
-  }
-
-  onMouseLeave() {
-    this.setState({dropdownOpen: false});
-  }
-
   logout() {
     axios.post("/api/users/logout", { withCredentials: true }).then(res => {
       removeCookie("session");
@@ -50,36 +44,39 @@ class NavbarComponent extends Component {
   }
 
   render() {
+    const trigger = (
+      <span>
+        <Image avatar src="https://via.placeholder.com/100" />
+      </span>
+    )
 
     return (
-        <Navbar style={{backgroundColor:'#fff', boxShadow:'0px -1px 20px 1px rgba(0,0,0,0.75)', zIndex:'100'}} fixed="top" expand="sm">
-        <Nav className="ml-auto" navbar>
-          <NavItem>
-          <Link to="/">
-          <Button color="secondary">Dashboard</Button>
-            </Link>
-          </NavItem>
-          <NavItem>
-          <Link to="/create-issue">
-          <Button color="primary" className="mx-2 mr-5">Create Issue</Button>
-            </Link>
-          </NavItem>
-          <UncontrolledDropdown nav inNavbar onMouseOver={this.onMouseEnter} onMouseLeave={this.onMouseLeave} isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-            <DropdownToggle nav caret>
-              {this.state.user.firstName}
-            </DropdownToggle>
-            <DropdownMenu right>
-              <DropdownItem>
-                My Issues
-              </DropdownItem>
-              <DropdownItem divider />
-              <DropdownItem onClick={this.logout}>
-                Logout
-              </DropdownItem>
-            </DropdownMenu>
-          </UncontrolledDropdown>
-        </Nav>
-    </Navbar>
+      <Menu secondary fixed='top' style={{boxShadow:'0px 0px 20px .3px rgba(0,0,0,0.6)'}}>
+        <Menu.Item as='a' header>
+          <Image size='mini' src={IssueIcon} className='mr-3' />
+          Project Pescadero
+        </Menu.Item>
+        <Menu.Menu>
+        <div className='ui right aligned category search item'>
+          <div className='ui transparent icon input'>
+            <input className='prompt' type='text' placeholder='Search issues...' />
+            <i className='search link icon' />
+          </div>
+          <div className='results' />
+        </div>
+      </Menu.Menu>
+      <Dropdown item trigger={trigger} simple className='right'>
+        <Dropdown.Menu>
+        <Dropdown.Header>{this.props.user.firstName}</Dropdown.Header>
+        <Dropdown.Divider />
+          <Dropdown.Header>Issues Opened: 15</Dropdown.Header>
+          <Dropdown.Header>Issues Resolved: 4</Dropdown.Header>
+          <Dropdown.Divider />
+          <Dropdown.Item onClick={this.logout}>Logout</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+    </Menu>
+
     )
   }
 }

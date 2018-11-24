@@ -1,9 +1,22 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { removeIssue } from "../actions/issues";
+import { Menu, Button, Card, Image, Icon } from 'semantic-ui-react';
 
 class Issues extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { 
+      activeItem: 'open' 
+    };
+  }
+
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+
   render() {
+    const { activeItem } = this.state
+
     if (this.props.hasErrored) {
       return <p>Sorry! There was an error loading the issues</p>;
     }
@@ -16,28 +29,65 @@ class Issues extends Component {
     }
     return (
       <div className="issues_container">
-        <div className="issues_header_card">Issues</div>
-        {this.props.issues.map((issue, index) => (
-          <div className="issue_card" key={issue._id}>
-          <div className="issue_author">
-          <img
-            className="issue_author_pic"
-            src="https://via.placeholder.com/150"
-            alt="Profile"
-          />
-          <p className="issue_author_name">{issue.author.firstName}</p>
-          </div>
-          <div className="issue">
-            <div className="issue_box">
-              <h2 className="issue_name">{issue.title}</h2>
-              <p className="issue_description">
-                {issue.description.length < 50 ? issue.description : issue.description.substring(0, 50) + '...' }
-              </p>
-            </div>
-            <button className="resolve_btn" onClick={() => this.props.removeIssue(index)}>Resolve</button>
-          </div>
+        <div>
+          <span className='ui huge header mx-3 mr-4'>Issues</span>
+          <span className='ui tiny header'>200 Open issues. 4 Resolved.</span>
         </div>
+        <Menu pointing secondary>
+          <Menu.Item name='open' active={activeItem === 'open'} onClick={this.handleItemClick} />
+          <Menu.Item
+            name='resolved'
+            active={activeItem === 'resolved'}
+            onClick={this.handleItemClick}
+          />
+          <Menu.Item
+            name='opened by me'
+            active={activeItem === 'opened by me'}
+            onClick={this.handleItemClick}
+          />
+          <Menu.Item
+            name='resolved by me'
+            active={activeItem === 'resolved by me'}
+            onClick={this.handleItemClick}
+          />
+        </Menu>
+        <div className="issues ui centered cards pl-2">
+        {this.props.issues.map((issue, index) => (
+          <Card fluid>
+          <Card.Content>
+            <Image floated='right' size='mini' src='https://react.semantic-ui.com/images/avatar/large/steve.jpg' />
+            <Card.Header>{issue.title}</Card.Header>
+            <Card.Meta>by: {issue.author.firstName}</Card.Meta>
+            <Card.Description>
+              {issue.description}
+            </Card.Description>
+          </Card.Content>
+          <Card.Content extra>
+            <div className='ui buttons right floated'>
+            {issue.author._id == this.props.user._id &&
+            <Button animated='vertical' negative>
+              <Button.Content hidden>Delete</Button.Content>
+              <Button.Content visible>
+                <Icon name='trash' />
+              </Button.Content>
+            </Button>
+            }
+            {issue.author._id == this.props.user._id &&
+            <Button animated='vertical' primary>
+            <Button.Content hidden>Edit</Button.Content>
+            <Button.Content visible>
+              <Icon name='pencil' />
+            </Button.Content>
+          </Button>
+            }
+            <Button positive>
+                Resolve
+            </Button>
+            </div>
+          </Card.Content>
+        </Card>
         ))}
+        </div>
       </div>
     );
   }
@@ -46,6 +96,7 @@ class Issues extends Component {
 const mapStateToProps = state => {
   return {
     issues: state.issues,
+    user: state.user,
     hasErrored: state.itemsHasErrored,
     isLoading: state.itemsIsLoading
   };

@@ -107,7 +107,7 @@ class MapComponent extends Component {
               process.env.REACT_APP_GOOGLE_MAPS_API_KEY
             }`}
             loadingElement={<div style={{ height: `100%` }} />}
-            containerElement={<div style={{ height: `91.9vh` }} />}
+            containerElement={<div style={{ height: `calc(100vh - 57px)` }} />}
             mapElement={<div style={{ height: `100%` }} />}
             draggable={false}
             issues={this.props.issues}

@@ -16,7 +16,7 @@ const Map = withScriptjs(
         lat: props.currentLocation.lat,
         lng: props.currentLocation.lng
       }}
-      onClick={c => props.addMarker(c.latLng)}
+      onClick={function(c) { props.addMarker(c.latLng, this)}}
     >
       {props.isMarkerShown && (
         <Marker
@@ -47,6 +47,7 @@ const Map = withScriptjs(
 class MapComponent extends Component {
   constructor(props) {
     super(props);
+    this.ref = React.createRef();
     this.state = {
       currentLatLng: {
         lat: 37.78768,
@@ -94,7 +95,7 @@ class MapComponent extends Component {
     this.showCurrentLocation();
   }
 
-  addMarker = location => {
+  addMarker = (location, map) => {
     const marker = {
       lat: location.lat(),
       lng: location.lng()
@@ -102,6 +103,10 @@ class MapComponent extends Component {
     this.setState(prevState => ({
       markers: [...prevState.markers, marker]
     }));
+    map.panTo({
+      lat: location.lat(),
+      lng: location.lng()
+    });
   };
 
   render() {
@@ -120,6 +125,7 @@ class MapComponent extends Component {
             loadingElement={<div style={{ height: `100%` }} />}
             containerElement={<div style={{ height: `46vh` }} />}
             mapElement={<div style={{ height: `100%` }} />}
+            draggable={false}
           />
         </div>
       );

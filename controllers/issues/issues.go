@@ -62,6 +62,7 @@ func (*issuesController) getIssues(c *gin.Context) {
 
 // CREATE ONE
 func (*issuesController) createIssue(c *gin.Context) {
+
 	issue := issue.Issue{}
 
 	if err := c.ShouldBindJSON(&issue); err == nil {
@@ -74,8 +75,9 @@ func (*issuesController) createIssue(c *gin.Context) {
 	}
 
 	c.JSON(400, gin.H{
-		"error": "Bad Request - Unable to create new User!",
+		"error": "Bad Request - Unable to create new Issue!",
 	})
+	
 }
 
 // UPDATE Issue BY ID QUERY

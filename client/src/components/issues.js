@@ -53,7 +53,7 @@ class Issues extends Component {
         </Menu>
         <div className="issues ui centered cards pl-2">
         {this.props.issues.map((issue, index) => (
-          <Card fluid>
+          <Card fluid key={issue._id}>
           <Card.Content>
             <Image floated='right' size='mini' src='https://react.semantic-ui.com/images/avatar/large/steve.jpg' />
             <Card.Header>{issue.title}</Card.Header>

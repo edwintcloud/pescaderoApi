@@ -40,9 +40,9 @@ class NavbarComponent extends Component {
       <Menu
         secondary
         fixed="top"
-        style={{ boxShadow: "0px 0px 20px .3px rgba(0,0,0,0.6)" }}
+        style={{ boxShadow: "0px 1px 10px -1px rgba(0,0,0,0.75)", zIndex:'150' }}
       >
-        <Menu.Item as="a" header>
+        <Menu.Item header>
           <Image size="mini" src={IssueIcon} className="mr-3" />
           Project Pescadero
         </Menu.Item>

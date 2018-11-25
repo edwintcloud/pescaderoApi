@@ -1,0 +1,13 @@
+{
+  "name": "imagecompress",
+  "version": "1.0.0",
+  "description": "An image compression and hosting server ",
+  "main": "app.js",
+  "author": "Carlos Alba ",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "mongoose": "^5.3.13"
+  }
+}

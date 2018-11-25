@@ -30,10 +30,12 @@ export function issues(state = [], action) {
       ];
     case "ISSUES_POST_SUCCESS":
       return [
-        ...state.push(action.issue),
+        ...state,
+        action.issue
       ];
 
     default:
       return state;
   }
 }
+

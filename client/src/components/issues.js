@@ -145,7 +145,7 @@ class Issues extends Component {
 
         <div className="issues ui centered cards pl-2">
           {this.props.issues.map((issue, index) => (
-            <Card fluid key={issue._id}>
+            <Card fluid key={index}>
               <Card.Content>
                 <Image
                   floated="right"
@@ -220,7 +220,7 @@ class Issues extends Component {
             >
               <Icon name="remove" /> Cancel
             </Button>
-            <Button color="green" disabled={this.state.descriptionInvalid || this.state.titleInvalid}>
+            <Button color="green" disabled={this.state.descriptionInvalid || this.state.titleInvalid || this.state.issue.title === '' || this.state.issue.description === ''}>
               <Icon name="checkmark" /> Save
             </Button>
           </Modal.Actions>

@@ -7,7 +7,14 @@ import {
 } from "react-google-maps";
 import IssueIcon from "../assets/images/warning-sign.png";
 import { connect } from 'react-redux';
-import { getIssues, removeIssue } from "../actions/issues";
+import { getIssues, removeIssue, addIssue } from "../actions/issues";
+import {
+  Button,
+  Icon,
+  Modal,
+  Header,
+  Form
+} from "semantic-ui-react";
 
 const Map = withScriptjs(
   withGoogleMap(props => (
@@ -27,7 +34,7 @@ const Map = withScriptjs(
           }}
         />
       )}
-      {props.issues.map(issue => (
+      {props.issues.map((issue, index) => (
         <Marker
           position={{
             lat: Number(issue.location.lat),
@@ -38,7 +45,7 @@ const Map = withScriptjs(
             scaledSize: new window.google.maps.Size(40, 40)
           }}
           title={issue.title}
-          key={issue._id}
+          key={index}
         />
       ))}
     </GoogleMap>
@@ -54,8 +61,24 @@ class MapComponent extends Component {
         lng: -122.41094
       },
       isMarkerShown: false,
-      zoom: 13
+      zoom: 13,
+      modalVisible: false,
+      issue: {
+        title: '',
+        description: '',
+        author: this.props.user._id,
+        city: this.props.user.city,
+        location: {
+          lat: '',
+          lng: ''
+        }
+      },
+      titleInvalid: false,
+      descriptionInvalid: false
     };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   showCurrentLocation = () => {
@@ -81,17 +104,65 @@ class MapComponent extends Component {
 
   addMarker = (location, map) => {
     const marker = {
-      lat: location.lat(),
-      lng: location.lng()
+      lat: String(location.lat()),
+      lng: String(location.lng())
     };
     this.setState(prevState => ({
-      markers: [...prevState.markers, marker]
+      issue: {
+        ...prevState.issue,
+        location: marker
+      }
     }));
     map.panTo({
       lat: location.lat(),
       lng: location.lng()
     });
+    this.showModalCreate();
   };
+
+  handleChange(event, data) {
+    this.setState(prevState => ({
+      issue: {
+        ...prevState.issue,
+        [data.name]: data.value
+      }
+    }));
+    if (data.name === "description") {
+      if (data.value.length < 49) {
+        this.setState({ descriptionInvalid: true });
+      } else {
+        this.setState({ descriptionInvalid: false });
+      }
+    }
+    if (data.name === "title") {
+      if (data.value.length < 5) {
+        this.setState({ titleInvalid: true });
+      } else {
+        this.setState({ titleInvalid: false });
+      }
+    }
+  }
+
+  handleSubmit() {
+    this.props.addIssue(this.state.issue);
+    this.props.getIssues(`/api/issues`);
+    this.setState({modalVisible:false})
+  }
+
+  showModalCreate() {
+    if (!this.state.modalVisible) {
+      this.setState(prevState => ({
+        issue: {
+          ...prevState.issue,
+          title: '',
+          description: ''
+        }
+      }));
+      this.setState({ modalVisible: true });
+      this.setState({ descriptionInvalid: false });
+      this.setState({ titleInvalid: false });
+    }
+  }
 
   render() {
     if (navigator.onLine) {
@@ -112,6 +183,41 @@ class MapComponent extends Component {
             draggable={false}
             issues={this.props.issues}
           />
+          <Modal open={this.state.modalVisible} className="issue_modal">
+          <Header icon="add" content="Create Issue" />
+          <Modal.Content>
+            <Form>
+              <Form.Input
+                fluid
+                label="Title"
+                placeholder="Issue title"
+                name="title"
+                value={this.state.issue.title}
+                onChange={this.handleChange}
+                error={this.state.titleInvalid}
+              />
+              <Form.TextArea
+                label="Description"
+                placeholder="Issue description..."
+                value={this.state.issue.description}
+                name="description"
+                onChange={this.handleChange}
+                error={this.state.descriptionInvalid}
+              />
+            </Form>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button
+              color="red"
+              onClick={() => this.setState({ modalVisible: false })}
+            >
+              <Icon name="remove" /> Cancel
+            </Button>
+            <Button color="green" disabled={this.state.descriptionInvalid || this.state.titleInvalid || this.state.issue.title === '' || this.state.issue.description === ''} onClick={() => this.handleSubmit()}>
+              <Icon name="checkmark" /> Save
+            </Button>
+          </Modal.Actions>
+        </Modal>
         </div>
       );
     } else {
@@ -134,6 +240,7 @@ class MapComponent extends Component {
 const mapStateToProps = (state) => {
   return {
       issues: state.issues,
+      user: state.user,
       hasErrored: state.itemsHasErrored,
       isLoading: state.itemsIsLoading
   };
@@ -142,7 +249,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => {
   return {
     getIssues: url => dispatch(getIssues(url)),
-    removeIssue: index => dispatch(removeIssue(index))
+    removeIssue: (index, id) => dispatch(removeIssue(index, id)),
+    addIssue: issue => dispatch(addIssue(issue))
   };
 };
 

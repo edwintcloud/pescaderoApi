@@ -61,7 +61,7 @@ export function addIssue(issue) {
   return dispatch => {
     fetch(`/api/issues`, {
       method: "post",
-      body: issue
+      body: JSON.stringify(issue)
     })
       .then(response => {
         if (!response.ok) {
@@ -69,13 +69,13 @@ export function addIssue(issue) {
         }
         return response;
       })
-      .then(response => {
-          const res = response.json()
-          if (res.hasOwnProperty("error")) {
-            throw Error(res.error);
-          }
-        })
-      .then(() => dispatch(addIssueSuccess(issue)))
+      .then(response => response.json())
+      .then(res => {
+        if (res.hasOwnProperty("error")) {
+          throw Error(res.error);
+        }
+        dispatch(addIssueSuccess(issue));
+      })
       .catch(e => {
         console.log(e);
         dispatch(issuesHasErrored(true));
@@ -84,26 +84,26 @@ export function addIssue(issue) {
 }
 
 export function removeIssue(index, id) {
-    return dispatch => {
-      fetch(`/api/issues?id=${id}`, {
-        method: "delete"
+  return dispatch => {
+    fetch(`/api/issues?id=${id}`, {
+      method: "delete"
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response;
       })
-        .then(response => {
-          if (!response.ok) {
-            throw Error(response.statusText);
-          }
-          return response;
-        })
-        .then(response => {
-            const res = response.json()
-            if (res.hasOwnProperty("error")) {
-              throw Error(res.error);
-            }
-          })
-        .then(() => dispatch(removeIssueSuccess(index)))
-        .catch(e => {
-          console.log(e);
-          dispatch(issuesHasErrored(true));
-        });
-    };
-  }
+      .then(response => response.json())
+      .then(res => {
+        if (res.hasOwnProperty("error")) {
+          throw Error(res.error);
+        }
+        dispatch(removeIssueSuccess(index));
+      })
+      .catch(e => {
+        console.log(e);
+        dispatch(issuesHasErrored(true));
+      });
+  };
+}

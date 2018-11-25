@@ -12,6 +12,8 @@ import {
   Form
 } from "semantic-ui-react";
 
+import axios from "axios";
+
 class Issues extends Component {
   constructor(props) {
     super(props);
@@ -19,9 +21,66 @@ class Issues extends Component {
     this.state = {
       activeItem: "open",
       modalVisible: false,
-      issue: {}
+      issue: {
+        title: '',
+        description: '',
+        author: this.props.user._id,
+        city: this.props.user.city,
+        location: {
+          lat: '',
+          lng: ''
+        }
+      },
+      titleInvalid: false,
+      descriptionInvalid: false
     };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
+
+  handleChange(event, data) {
+    this.setState(prevState => ({
+      issue: {
+        ...prevState.issue,
+        [data.name]: data.value
+      }
+    }));
+    if (data.name === "description") {
+      if (data.value.length < 49) {
+        this.setState({ descriptionInvalid: true });
+      } else {
+        this.setState({ descriptionInvalid: false });
+      }
+    }
+    if (data.name === "title") {
+      if (data.value.length < 5) {
+        this.setState({ titleInvalid: true });
+      } else {
+        this.setState({ titleInvalid: false });
+      }
+    }
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    axios
+      .post("/api/users", this.state, { withCredentials: true })
+      .then(res => {
+        if ("error" in res.data) {
+          this.setState({ emailInvalid: true });
+          document.getElementById(
+            "email-feedback"
+          ).innerHTML = `Email already registered! Please <a href="/login">login</a>`;
+        } else {
+          window.location = "/dashboard";
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
@@ -34,9 +93,11 @@ class Issues extends Component {
   }
 
   showModalEdit(issue) {
-    if(!this.state.modalVisible) {
-      this.setState({issue:issue})
-      this.setState({modalVisible:true})
+    if (!this.state.modalVisible) {
+      this.setState({ issue: issue });
+      this.setState({ modalVisible: true });
+      this.setState({ descriptionInvalid: false });
+      this.setState({ titleInvalid: false });
     }
   }
 
@@ -110,14 +171,18 @@ class Issues extends Component {
                     </Button>
                   )}
                   {issue.author._id === this.props.user._id && (
-                    <Button animated="vertical" primary onClick={() => this.showModalEdit(issue)}>
+                    <Button
+                      animated="vertical"
+                      primary
+                      onClick={() => this.showModalEdit(issue)}
+                    >
                       <Button.Content hidden>Edit</Button.Content>
                       <Button.Content visible>
                         <Icon name="pencil" />
                       </Button.Content>
                     </Button>
                   )}
-                  {issue.author._id != this.props.user._id && (
+                  {issue.author._id !== this.props.user._id && (
                     <Button positive>Resolve</Button>
                   )}
                 </div>
@@ -125,22 +190,37 @@ class Issues extends Component {
             </Card>
           ))}
         </div>
-        <Modal
-          open={this.state.modalVisible}
-          className="issue_modal"
-        >
+        <Modal open={this.state.modalVisible} className="issue_modal">
           <Header icon="pencil" content="Edit Issue" />
           <Modal.Content>
-          <Form>
-          <Form.Input fluid label='Title' placeholder='Issue title' value={this.state.issue.title} />
-        <Form.TextArea label='Description' placeholder='Issue description...' value={this.state.issue.description} />
-      </Form>
+            <Form>
+              <Form.Input
+                fluid
+                label="Title"
+                placeholder="Issue title"
+                name="title"
+                value={this.state.issue.title}
+                onChange={this.handleChange}
+                error={this.state.titleInvalid}
+              />
+              <Form.TextArea
+                label="Description"
+                placeholder="Issue description..."
+                value={this.state.issue.description}
+                name="description"
+                onChange={this.handleChange}
+                error={this.state.descriptionInvalid}
+              />
+            </Form>
           </Modal.Content>
           <Modal.Actions>
-            <Button color="red" onClick={() => this.setState({modalVisible:false})}>
+            <Button
+              color="red"
+              onClick={() => this.setState({ modalVisible: false })}
+            >
               <Icon name="remove" /> Cancel
             </Button>
-            <Button color="green">
+            <Button color="green" disabled={this.state.descriptionInvalid || this.state.titleInvalid}>
               <Icon name="checkmark" /> Save
             </Button>
           </Modal.Actions>

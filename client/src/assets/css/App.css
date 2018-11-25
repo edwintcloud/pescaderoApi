@@ -60,12 +60,17 @@
   padding-top: 15px;
   box-shadow: -3px 0px 10px -5px rgba(0,0,0,0.75);
   z-index: 100;
+  overflow: hidden;
 }
 
 .issues {
-  overflow-y: auto;
+  overflow-y: scroll;
   padding-top: 9px;
   padding-bottom: 24px;
+  padding-left: 12px!important;
+  padding-right: 17px!important;
+  box-sizing: content-box!important;
+  width: 100%!important;
 }
 
 .sidebar_container {

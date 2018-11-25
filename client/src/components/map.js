@@ -46,6 +46,7 @@ const Map = withScriptjs(
           }}
           title={issue.title}
           key={index}
+          onClick={() => props.markerClick(issue._id)}
         />
       ))}
     </GoogleMap>
@@ -71,7 +72,8 @@ class MapComponent extends Component {
         location: {
           lat: '',
           lng: ''
-        }
+        },
+        resolved: "false"
       },
       titleInvalid: false,
       descriptionInvalid: false
@@ -119,6 +121,11 @@ class MapComponent extends Component {
     });
     this.showModalCreate();
   };
+
+  markerClick = (id) => {
+    console.log(id)
+    this.props.getIssues(`/api/issues?id=${id}`);
+  }
 
   handleChange(event, data) {
     this.setState(prevState => ({
@@ -182,6 +189,7 @@ class MapComponent extends Component {
             mapElement={<div style={{ height: `100%` }} />}
             draggable={false}
             issues={this.props.issues}
+            markerClick={this.markerClick}
           />
           <Modal open={this.state.modalVisible} className="issue_modal">
           <Header icon="add" content="Create Issue" />

@@ -21,6 +21,7 @@ type Issue struct {
 	ResolvedBy  bson.ObjectId  `json:"resolvedBy,omitempty" bson:"resolvedBy,omitempty" structs:"resolvedBy"`
 	City        bson.ObjectId  `json:"city" bson:"city" binding:"required" structs:"city"`
 	Location    LocationObject `bson:"location" json:"location" binding:"required" structs:"location"`
+	Resolved    string         `bson:"resolved" json:"resolved" binding:"required" structs:"resolved"`
 }
 
 // Result model
@@ -32,6 +33,7 @@ type Result struct {
 	ResolvedBy  bson.ObjectId  `json:"resolvedBy,omitempty" bson:"resolvedBy,omitempty" structs:"resolvedBy"`
 	City        CityResult     `json:"city" bson:"city" binding:"required" structs:"city"`
 	Location    LocationObject `bson:"location" json:"location" binding:"required" structs:"location"`
+	Resolved    string         `bson:"resolved" json:"resolved" binding:"required" structs:"resolved"`
 }
 
 // UserResult model

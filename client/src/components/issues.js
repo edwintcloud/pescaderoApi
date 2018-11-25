@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { removeIssue } from "../actions/issues";
+import { getIssues, removeIssue } from "../actions/issues";
 import {
   Menu,
   Button,
@@ -19,17 +19,18 @@ class Issues extends Component {
     super(props);
 
     this.state = {
-      activeItem: "open",
+      activeItem: "all",
       modalVisible: false,
       issue: {
-        title: '',
-        description: '',
+        title: "",
+        description: "",
         author: this.props.user._id,
         city: this.props.user.city,
         location: {
-          lat: '',
-          lng: ''
-        }
+          lat: "",
+          lng: ""
+        },
+        resolved: "false"
       },
       titleInvalid: false,
       descriptionInvalid: false
@@ -81,8 +82,28 @@ class Issues extends Component {
       });
   }
 
-
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
+  handleItemClick = (e, { name }) => {
+    switch (name) {
+      case "all":
+        this.props.getIssues(`/api/issues`)
+        break;
+      case "open":
+        this.props.getIssues(`/api/issues?resolved=false`)
+        break;
+      case "resolved":
+        this.props.getIssues(`/api/issues?resolved=true`);
+        break;
+      case "opened by me":
+        console.log("open");
+        break;
+      case "resolved by me":
+        console.log("open");
+        break;
+      default:
+        console.log(name);
+    }
+    this.setState({ activeItem: name });
+  };
 
   handleDeleteIssue(index, issue) {
     if (
@@ -112,7 +133,42 @@ class Issues extends Component {
     }
 
     if (!this.props.issues.length) {
-      return <p>No issues to display</p>;
+      return (
+        <div className="issues_container">
+        <div style={{ marginBottom: "12px" }}>
+          <span className="ui huge header mx-3 mr-4">Issues</span>
+          <span className="ui tiny header">200 Open issues. 4 Resolved.</span>
+          <Menu pointing secondary>
+          <Menu.Item
+              name="all"
+              active={activeItem === "all"}
+              onClick={this.handleItemClick}
+            />
+            <Menu.Item
+              name="open"
+              active={activeItem === "open"}
+              onClick={this.handleItemClick}
+            />
+            <Menu.Item
+              name="resolved"
+              active={activeItem === "resolved"}
+              onClick={this.handleItemClick}
+            />
+            <Menu.Item
+              name="opened by me"
+              active={activeItem === "opened by me"}
+              onClick={this.handleItemClick}
+            />
+            <Menu.Item
+              name="resolved by me"
+              active={activeItem === "resolved by me"}
+              onClick={this.handleItemClick}
+            />
+          </Menu>
+        </div>
+        <p className="ml-4 ui header">No issues to display!</p>
+      </div>
+      );
     }
     return (
       <div className="issues_container">
@@ -120,6 +176,11 @@ class Issues extends Component {
           <span className="ui huge header mx-3 mr-4">Issues</span>
           <span className="ui tiny header">200 Open issues. 4 Resolved.</span>
           <Menu pointing secondary>
+          <Menu.Item
+              name="all"
+              active={activeItem === "all"}
+              onClick={this.handleItemClick}
+            />
             <Menu.Item
               name="open"
               active={activeItem === "open"}
@@ -143,7 +204,7 @@ class Issues extends Component {
           </Menu>
         </div>
 
-        <div className="issues ui centered cards pl-2">
+        <div className="issues ui centered cards px-2">
           {this.props.issues.map((issue, index) => (
             <Card fluid key={index}>
               <Card.Content>
@@ -220,7 +281,15 @@ class Issues extends Component {
             >
               <Icon name="remove" /> Cancel
             </Button>
-            <Button color="green" disabled={this.state.descriptionInvalid || this.state.titleInvalid || this.state.issue.title === '' || this.state.issue.description === ''}>
+            <Button
+              color="green"
+              disabled={
+                this.state.descriptionInvalid ||
+                this.state.titleInvalid ||
+                this.state.issue.title === "" ||
+                this.state.issue.description === ""
+              }
+            >
               <Icon name="checkmark" /> Save
             </Button>
           </Modal.Actions>
@@ -241,6 +310,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    getIssues: url => dispatch(getIssues(url)),
     removeIssue: (index, id) => dispatch(removeIssue(index, id))
   };
 };

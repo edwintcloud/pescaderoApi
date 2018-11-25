@@ -36,10 +36,9 @@ func Register(e *gin.Engine) {
 // FIND issues BY QUERY OR LIST ALL
 func (*issuesController) getIssues(c *gin.Context) {
 	var err error
-	issues := []issue.Issue{}
 	result := []issue.Result{}
 
-	// make query params into a map string:string
+	// make query params into a map string:interface{}
 	filter := make(map[string]string)
 	for k, v := range c.Request.URL.Query() {
 		filter[k] = v[0]
@@ -51,7 +50,35 @@ func (*issuesController) getIssues(c *gin.Context) {
 			err = errors.New("not a valid ObjectId")
 		}
 		if err == nil {
-			err = d.FindId(bson.ObjectIdHex(id)).All(&issues)
+			err = d.Pipe([]bson.M{
+				{"$match": bson.M{
+					"_id": bson.ObjectIdHex(id),
+				}},
+				{"$lookup": bson.M{
+					"from":         "users",
+					"localField":   "author",
+					"foreignField": "_id",
+					"as":           "author",
+				}},
+				{"$lookup": bson.M{
+					"from":         "cities",
+					"localField":   "city",
+					"foreignField": "_id",
+					"as":           "city",
+				}},
+				{"$project": bson.M{
+					"title":       1,
+					"description": 1,
+					"location":    1,
+					"resolved":    1,
+					"author": bson.M{
+						"$arrayElemAt": []interface{}{"$author", 0},
+					},
+					"city": bson.M{
+						"$arrayElemAt": []interface{}{"$city", 0},
+					},
+				}},
+			}).All(&result)
 		}
 	} else {
 		err = d.Pipe([]bson.M{
@@ -72,6 +99,7 @@ func (*issuesController) getIssues(c *gin.Context) {
 				"title":       1,
 				"description": 1,
 				"location":    1,
+				"resolved":    1,
 				"author": bson.M{
 					"$arrayElemAt": []interface{}{"$author", 0},
 				},
@@ -88,11 +116,7 @@ func (*issuesController) getIssues(c *gin.Context) {
 			"error": err.Error(),
 		})
 	} else {
-		if len(result) > len(issues) {
-			c.JSON(200, result)
-		} else {
-			c.JSON(200, issues)
-		}
+		c.JSON(200, result)
 	}
 }
 

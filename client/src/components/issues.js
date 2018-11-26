@@ -63,10 +63,18 @@ class Issues extends Component {
 
   handleSubmit() {
     const data = {
+      _id: this.state.issue._id,
       title: this.state.issue.title,
-      description: this.state.issue.description
+      description: this.state.issue.description,
+      author: this.props.user._id,
+      city: this.props.user.city,
+      location: {
+        lat: this.state.issue.location.lat,
+        lng: this.state.issue.location.lng
+      },
+      resolved: this.state.issue.resolved
     };
-    this.props.updateIssue(this.state.issue._id, data)
+    this.props.updateIssue(data);
     this.setState({modalVisible:false});
   }
 
@@ -301,7 +309,7 @@ const mapDispatchToProps = dispatch => {
   return {
     getIssues: url => dispatch(getIssues(url)),
     removeIssue: (index, id) => dispatch(removeIssue(index, id)),
-    updateIssue: (id, updates) => dispatch(updateIssue(id, updates))
+    updateIssue: (issue) => dispatch(updateIssue(issue))
   };
 };
 

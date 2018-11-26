@@ -55,7 +55,7 @@ type CityResult struct {
 }
 
 // CheckValid validates issue model.
-func (Issue) CheckValid(m *Issue) error {
+func (m Issue) CheckValid() error {
 
 	if len(m.Title) < 5 {
 		return errors.New("title must be at least 6 characters long")

@@ -1,12 +1,13 @@
 package issues
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"pescaderoApi/models/issue"
 	"pescaderoApi/utils/db"
+	"reflect"
 
+	"github.com/fatih/structs"
 	"github.com/gin-gonic/gin"
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
@@ -131,7 +132,7 @@ func (*issuesController) createIssue(c *gin.Context) {
 		err = d.Insert(&issue)
 	}
 	if err == nil {
-		err = issue.CheckValid(&issue)
+		err = issue.CheckValid()
 	}
 
 	// return results
@@ -150,16 +151,23 @@ func (*issuesController) createIssue(c *gin.Context) {
 func (*issuesController) updateIssue(c *gin.Context) {
 	var err error
 	var id string
-	var bsonBody map[string]string
 	result := []issue.Result{}
+	issue := issue.Issue{}
 
-	// read req body into byte slice buffer then convert to json map string:string
-	buf := make([]byte, 1024)
-	num, _ := c.Request.Body.Read(buf)
-	reqBody := []byte(buf[0:num])
-	json.Unmarshal(reqBody, &bsonBody)
+	// bind body to issues struct and validate
+	err = c.ShouldBindJSON(&issue)
+	if err == nil {
+		err = issue.CheckValid()
+	}
 
-	// TODO sanitize or throw error
+	// convert issue struct to map and delete empty fields
+	reqBody := structs.Map(&issue)
+	for k := range reqBody {
+		if reflect.DeepEqual(reqBody[k], reflect.Zero(reflect.TypeOf(reqBody[k])).Interface()) {
+			delete(reqBody, k)
+		}
+	}
+	fmt.Println(reqBody)
 
 	// make sure query params id is specified and a valid objectid
 	if id = c.Query("id"); id == "" {
@@ -169,27 +177,9 @@ func (*issuesController) updateIssue(c *gin.Context) {
 		err = errors.New("not a valid ObjectId")
 	}
 
-	// // bind req body to issue struct and validate
-	// if err == nil {
-	// 	err = c.ShouldBindJSON(&issue)
-	// }
-	// if err == nil {
-	// 	err = issue.CheckValid(&issue)
-	// }
-
-	// // convert struct to map and delete empty fields
-	// updates := structs.Map(&issue)
-	// for i := range updates {
-	// 	if val, ok := updates[i].(string); ok && len(val) == 0 {
-	// 		delete(updates, i)
-	// 	} else if val, ok := updates[i].(bson.ObjectId); ok && len(val) == 0 {
-	// 		delete(updates, i)
-	// 	}
-	// }
-
 	// update document in db
 	if err == nil {
-		err = d.UpdateId(bson.ObjectIdHex(id), bsonBody)
+		err = d.UpdateId(bson.ObjectIdHex(id), reqBody)
 	}
 
 	// find updated document

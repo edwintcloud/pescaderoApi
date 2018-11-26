@@ -115,13 +115,15 @@ export function removeIssue(index, id) {
   };
 }
 
-export function updateIssue(id, updates) {
+export function updateIssue(issue) {
   return dispatch => {
-    fetch(`/api/issues?id=${id}`, {
+    console.log(JSON.stringify(issue))
+    fetch(`/api/issues?id=${issue._id}`, {
       method: "put",
-      body: JSON.stringify(updates)
+      body: JSON.stringify(issue)
     })
       .then(response => {
+        console.log("hello")
         if (!response.ok) {
           throw Error(response.statusText);
         }

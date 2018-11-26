@@ -1,12 +1,12 @@
 package issues
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"pescaderoApi/models/issue"
 	"pescaderoApi/utils/db"
 
-	"github.com/fatih/structs"
 	"github.com/gin-gonic/gin"
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
@@ -150,7 +150,16 @@ func (*issuesController) createIssue(c *gin.Context) {
 func (*issuesController) updateIssue(c *gin.Context) {
 	var err error
 	var id string
-	issue := issue.Issue{}
+	var bsonBody map[string]string
+	result := []issue.Result{}
+
+	// read req body into byte slice buffer then convert to json map string:string
+	buf := make([]byte, 1024)
+	num, _ := c.Request.Body.Read(buf)
+	reqBody := []byte(buf[0:num])
+	json.Unmarshal(reqBody, &bsonBody)
+
+	// TODO sanitize or throw error
 
 	// make sure query params id is specified and a valid objectid
 	if id = c.Query("id"); id == "" {
@@ -160,27 +169,60 @@ func (*issuesController) updateIssue(c *gin.Context) {
 		err = errors.New("not a valid ObjectId")
 	}
 
-	// bind req body to issue struct and validate
-	if err == nil {
-		err = c.ShouldBindJSON(&issue)
-	}
-	if err == nil {
-		err = issue.CheckValid(&issue)
-	}
+	// // bind req body to issue struct and validate
+	// if err == nil {
+	// 	err = c.ShouldBindJSON(&issue)
+	// }
+	// if err == nil {
+	// 	err = issue.CheckValid(&issue)
+	// }
 
-	// convert struct to map and delete empty fields
-	updates := structs.Map(&issue)
-	for i := range updates {
-		if val, ok := updates[i].(string); ok && len(val) == 0 {
-			delete(updates, i)
-		} else if val, ok := updates[i].(bson.ObjectId); ok && len(val) == 0 {
-			delete(updates, i)
-		}
-	}
+	// // convert struct to map and delete empty fields
+	// updates := structs.Map(&issue)
+	// for i := range updates {
+	// 	if val, ok := updates[i].(string); ok && len(val) == 0 {
+	// 		delete(updates, i)
+	// 	} else if val, ok := updates[i].(bson.ObjectId); ok && len(val) == 0 {
+	// 		delete(updates, i)
+	// 	}
+	// }
 
 	// update document in db
 	if err == nil {
-		err = d.UpdateId(bson.ObjectIdHex(id), updates)
+		err = d.UpdateId(bson.ObjectIdHex(id), bsonBody)
+	}
+
+	// find updated document
+	if err == nil {
+		err = d.Pipe([]bson.M{
+			{"$match": bson.M{
+				"_id": bson.ObjectIdHex(id),
+			}},
+			{"$lookup": bson.M{
+				"from":         "users",
+				"localField":   "author",
+				"foreignField": "_id",
+				"as":           "author",
+			}},
+			{"$lookup": bson.M{
+				"from":         "cities",
+				"localField":   "city",
+				"foreignField": "_id",
+				"as":           "city",
+			}},
+			{"$project": bson.M{
+				"title":       1,
+				"description": 1,
+				"location":    1,
+				"resolved":    1,
+				"author": bson.M{
+					"$arrayElemAt": []interface{}{"$author", 0},
+				},
+				"city": bson.M{
+					"$arrayElemAt": []interface{}{"$city", 0},
+				},
+			}},
+		}).All(&result)
 	}
 
 	// return results
@@ -189,9 +231,7 @@ func (*issuesController) updateIssue(c *gin.Context) {
 			"error": err.Error(),
 		})
 	} else {
-		c.JSON(200, gin.H{
-			"message": fmt.Sprintf("Issue %s successfully updated!", issue.Title),
-		})
+		c.JSON(200, result[0])
 	}
 }
 

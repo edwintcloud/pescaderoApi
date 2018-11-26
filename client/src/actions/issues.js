@@ -34,6 +34,13 @@ export function addIssueSuccess(issue) {
   };
 }
 
+export function updateIssueSuccess(issue) {
+  return {
+    type: "ISSUES_PUT_SUCCESS",
+    issue
+  };
+}
+
 // actions
 export function getIssues(url) {
   return dispatch => {
@@ -100,6 +107,33 @@ export function removeIssue(index, id) {
           throw Error(res.error);
         }
         dispatch(removeIssueSuccess(index));
+      })
+      .catch(e => {
+        console.log(e);
+        dispatch(issuesHasErrored(true));
+      });
+  };
+}
+
+export function updateIssue(id, updates) {
+  return dispatch => {
+    fetch(`/api/issues?id=${id}`, {
+      method: "put",
+      body: JSON.stringify(updates)
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response;
+      })
+      .then(response => response.json())
+      .then(res => {
+        if (res.hasOwnProperty("error")) {
+          throw Error(res.error);
+        }
+        console.log(res)
+        dispatch(updateIssueSuccess(res));
       })
       .catch(e => {
         console.log(e);

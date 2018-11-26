@@ -15,13 +15,13 @@ type LocationObject struct {
 // Issue model
 type Issue struct {
 	ID          bson.ObjectId  `json:"_id,omitempty" bson:"_id,omitempty" structs:"_id"`
-	Title       string         `bson:"title" json:"title" binding:"required" structs:"title"`
-	Description string         `bson:"description" json:"description" binding:"required" structs:"description"`
-	Author      bson.ObjectId  `json:"author" bson:"author" binding:"required" structs:"author"`
+	Title       string         `bson:"title" json:"title" structs:"title"`
+	Description string         `bson:"description" json:"description" structs:"description"`
+	Author      bson.ObjectId  `json:"author" bson:"author" structs:"author"`
 	ResolvedBy  bson.ObjectId  `json:"resolvedBy,omitempty" bson:"resolvedBy,omitempty" structs:"resolvedBy"`
-	City        bson.ObjectId  `json:"city" bson:"city" binding:"required" structs:"city"`
-	Location    LocationObject `bson:"location" json:"location" binding:"required" structs:"location"`
-	Resolved    string         `bson:"resolved" json:"resolved" binding:"required" structs:"resolved"`
+	City        bson.ObjectId  `json:"city" bson:"city" structs:"city"`
+	Location    LocationObject `bson:"location" json:"location" structs:"location"`
+	Resolved    string         `bson:"resolved" json:"resolved" structs:"resolved"`
 }
 
 // Result model

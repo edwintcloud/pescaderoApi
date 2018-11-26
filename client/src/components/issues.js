@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getIssues, removeIssue } from "../actions/issues";
+import { getIssues, removeIssue, updateIssue } from "../actions/issues";
 import {
   Menu,
   Button,
@@ -11,8 +11,6 @@ import {
   Header,
   Form
 } from "semantic-ui-react";
-
-import axios from "axios";
 
 class Issues extends Component {
   constructor(props) {
@@ -63,23 +61,13 @@ class Issues extends Component {
     }
   }
 
-  handleSubmit(e) {
-    e.preventDefault();
-    axios
-      .post("/api/users", this.state, { withCredentials: true })
-      .then(res => {
-        if ("error" in res.data) {
-          this.setState({ emailInvalid: true });
-          document.getElementById(
-            "email-feedback"
-          ).innerHTML = `Email already registered! Please <a href="/login">login</a>`;
-        } else {
-          window.location = "/dashboard";
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  handleSubmit() {
+    const data = {
+      title: this.state.issue.title,
+      description: this.state.issue.description
+    };
+    this.props.updateIssue(this.state.issue._id, data)
+    this.setState({modalVisible:false});
   }
 
   handleItemClick = (e, { name }) => {
@@ -289,6 +277,7 @@ class Issues extends Component {
                 this.state.issue.title === "" ||
                 this.state.issue.description === ""
               }
+              onClick={() => this.handleSubmit()}
             >
               <Icon name="checkmark" /> Save
             </Button>
@@ -311,7 +300,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     getIssues: url => dispatch(getIssues(url)),
-    removeIssue: (index, id) => dispatch(removeIssue(index, id))
+    removeIssue: (index, id) => dispatch(removeIssue(index, id)),
+    updateIssue: (id, updates) => dispatch(updateIssue(id, updates))
   };
 };
 

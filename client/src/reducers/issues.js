@@ -33,7 +33,13 @@ export function issues(state = [], action) {
         ...state,
         action.issue
       ];
-
+    case "ISSUES_PUT_SUCCESS":
+    const index = state.findIndex(issue => issue._id === action.issue._id);
+      return [
+        ...state.slice(0, index),
+        action.issue,
+        ...state.slice(index + 1)
+      ];
     default:
       return state;
   }

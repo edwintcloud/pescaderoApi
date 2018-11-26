@@ -20,10 +20,7 @@ const Map = withScriptjs(
   withGoogleMap(props => (
     <GoogleMap
       zoom={props.zoom}
-      center={{
-        lat: props.currentLocation.lat,
-        lng: props.currentLocation.lng
-      }}
+      center={props.center}
       onClick={function(c) { props.addMarker(c.latLng, this)}}
     >
       {props.isMarkerShown && (
@@ -76,7 +73,11 @@ class MapComponent extends Component {
         resolved: "false"
       },
       titleInvalid: false,
-      descriptionInvalid: false
+      descriptionInvalid: false,
+      center: {
+        lat: 37.78768,
+        lng: -122.41094
+      }
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -89,6 +90,11 @@ class MapComponent extends Component {
         this.setState(prevState => ({
           currentLatLng: {
             ...prevState.currentLatLng,
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          },
+          center: {
+            ...prevState.center,
             lat: position.coords.latitude,
             lng: position.coords.longitude
           },
@@ -105,6 +111,13 @@ class MapComponent extends Component {
   }
 
   addMarker = (location, map) => {
+    this.setState({zoom:15})
+    this.setState(() => ({
+      center:{
+        lat: location.lat(),
+        lng: location.lng()
+      }
+    }));
     const marker = {
       lat: String(location.lat()),
       lng: String(location.lng())
@@ -115,15 +128,11 @@ class MapComponent extends Component {
         location: marker
       }
     }));
-    map.panTo({
-      lat: location.lat(),
-      lng: location.lng()
-    });
+    
     this.showModalCreate();
   };
 
   markerClick = (id) => {
-    console.log(id)
     this.props.getIssues(`/api/issues?id=${id}`);
   }
 
@@ -190,6 +199,7 @@ class MapComponent extends Component {
             draggable={false}
             issues={this.props.issues}
             markerClick={this.markerClick}
+            center={this.state.center}
           />
           <Modal open={this.state.modalVisible} className="issue_modal">
           <Header icon="add" content="Create Issue" />

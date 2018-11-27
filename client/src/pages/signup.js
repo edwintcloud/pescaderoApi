@@ -72,7 +72,23 @@ class SignUp extends Component {
             "email-feedback"
           ).innerHTML = `Email already registered! Please <a href="/login">login</a>`;
         } else {
+          axios
+      .post("/api/users/login", this.state, { withCredentials: true })
+      .then(res => {
+        if (res.data.hasOwnProperty("error")) {
+          console.log(res.data.error)
+          if (res.data.error.includes("password")) {
+            this.setState({ passwordInvalid: true });
+          } else {
+            this.setState({ emailInvalid: true });
+          } 
+        } else {
           window.location = "/dashboard";
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
         }
       })
       .catch(err => {

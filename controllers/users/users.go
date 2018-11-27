@@ -103,6 +103,7 @@ func (*usersController) createUser(c *gin.Context) {
 		// set password to empty so we don't expose it
 		reqUser.Password = ""
 		bytes, _ := bson.Marshal(&reqUser)
+		fmt.Println(reqUser)
 		session.Set("user", string(bytes))
 		session.Save()
 
@@ -174,6 +175,7 @@ func (*usersController) loginUser(c *gin.Context) {
 		session := sessions.Default(c)
 		// set password to empty so we don't expose it
 		foundUser.Password = ""
+		fmt.Println(foundUser)
 		bytes, _ := bson.Marshal(&foundUser)
 		session.Set("user", string(bytes))
 		session.Save()

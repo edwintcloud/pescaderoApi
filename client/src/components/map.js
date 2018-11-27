@@ -163,6 +163,7 @@ class MapComponent extends Component {
     this.props.addIssue(this.state.issue);
     this.props.getIssues(`/api/issues`);
     this.setState({modalVisible:false})
+    window.location.reload();
   }
 
   showModalCreate() {

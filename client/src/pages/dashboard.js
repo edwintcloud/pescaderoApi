@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Map from '../components/map';
 import NavbarComponent from '../components/navbar';
 import DashboardHome from './dashboard-home';
-import CreateIssue from './dashboard-create-issue';
 import { BrowserRouter, Route, Redirect } from 'react-router-dom';
 import { connect } from "react-redux";
 
@@ -19,7 +18,6 @@ class Dashboard extends Component {
       <div className="dashboard_container">
         <Map></Map>
         <Route exact path="/" component={DashboardHome} />
-        <Route exact path="/create-issue" component={CreateIssue} />
       </div>
       </div>
       </BrowserRouter>

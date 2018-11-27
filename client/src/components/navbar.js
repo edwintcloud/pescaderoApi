@@ -7,7 +7,6 @@ import {
 import axios from "axios";
 import { removeCookie } from "tiny-cookie";
 import { connect } from "react-redux";
-import IssueIcon from "../assets/images/warning-sign.png";
 
 class NavbarComponent extends Component {
   constructor(props) {
@@ -40,13 +39,12 @@ class NavbarComponent extends Component {
       <Menu
         secondary
         fixed="top"
-        style={{ boxShadow: "0px 1px 10px -1px rgba(0,0,0,0.75)", zIndex:'150' }}
+        style={{ boxShadow: "0px 1px 10px -1px rgba(0,0,0,0.75)", zIndex:'150', padding:'3.5px' }}
       >
         <Menu.Item header>
-          <Image size="mini" src={IssueIcon} className="mr-3" />
           Project Pescadero
         </Menu.Item>
-        <Menu.Menu>
+        {/* <Menu.Menu>
           <div className="ui right aligned category search item" style={{width:'25vw'}}>
             <div className="ui transparent icon input">
               <input
@@ -58,13 +56,10 @@ class NavbarComponent extends Component {
             </div>
             <div className="results" />
           </div>
-        </Menu.Menu>
-        <Dropdown item trigger={trigger} simple className="right">
+        </Menu.Menu> */}
+        <Dropdown item trigger={trigger} className="right px-5">
           <Dropdown.Menu>
             <Dropdown.Header>{this.props.user.firstName}</Dropdown.Header>
-            <Dropdown.Divider />
-            <Dropdown.Header>Issues Opened: 15</Dropdown.Header>
-            <Dropdown.Header>Issues Resolved: 4</Dropdown.Header>
             <Dropdown.Divider />
             <Dropdown.Item onClick={this.logout}>Logout</Dropdown.Item>
           </Dropdown.Menu>

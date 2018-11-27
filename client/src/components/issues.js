@@ -12,6 +12,8 @@ import {
   Form
 } from "semantic-ui-react";
 
+import axios from 'axios';
+
 class Issues extends Component {
   constructor(props) {
     super(props);
@@ -31,7 +33,9 @@ class Issues extends Component {
         resolved: "false"
       },
       titleInvalid: false,
-      descriptionInvalid: false
+      descriptionInvalid: false,
+      openIssues: 0,
+      resolvedIssues: 0
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -76,6 +80,7 @@ class Issues extends Component {
     };
     this.props.updateIssue(data);
     this.setState({modalVisible:false});
+    this.updateCount();
   }
 
   handleItemClick = (e, { name }) => {
@@ -106,6 +111,7 @@ class Issues extends Component {
       window.confirm(`Are you sure you wish to delete issue ${issue.title}?`)
     ) {
       this.props.removeIssue(index, issue._id);
+      this.updateCount();
     }
   }
 
@@ -116,6 +122,35 @@ class Issues extends Component {
       this.setState({ descriptionInvalid: false });
       this.setState({ titleInvalid: false });
     }
+  }
+
+  resolveBtnClick(issue) {
+      this.setState({ issue: issue });
+      const data = {
+        _id: issue._id,
+        resolved: "true",
+        resolvedBy: this.props.user._id,
+        location: issue.location,
+        title: issue.title,
+        description: issue.description,
+        author: issue.author._id,
+        city: issue.city._id
+      };
+      this.props.updateIssue(data);
+      this.updateCount();
+  }
+
+  componentWillMount() {
+    this.updateCount();
+  }
+
+  updateCount() {
+    axios.get(`/api/issues?resolved=true`).then(res => {
+      this.setState({resolvedIssues: res.data.length});
+    })
+    axios.get(`/api/issues?resolved=false`).then(res => {
+      this.setState({openIssues: res.data.length});
+    })
   }
 
   render() {
@@ -133,7 +168,7 @@ class Issues extends Component {
         <div className="issues_container">
         <div style={{ marginBottom: "12px" }}>
           <span className="ui huge header mx-3 mr-4">Issues</span>
-          <span className="ui tiny header">200 Open issues. 4 Resolved.</span>
+          <span className="ui tiny header">{this.state.openIssues} Open issues. {this.state.resolvedIssues} Resolved.</span>
           <Menu pointing secondary>
           <Menu.Item
               name="all"
@@ -150,7 +185,7 @@ class Issues extends Component {
               active={activeItem === "resolved"}
               onClick={this.handleItemClick}
             />
-            <Menu.Item
+            {/* <Menu.Item
               name="opened by me"
               active={activeItem === "opened by me"}
               onClick={this.handleItemClick}
@@ -159,7 +194,7 @@ class Issues extends Component {
               name="resolved by me"
               active={activeItem === "resolved by me"}
               onClick={this.handleItemClick}
-            />
+            /> */}
           </Menu>
         </div>
         <p className="ml-4 ui header">No issues to display!</p>
@@ -170,7 +205,7 @@ class Issues extends Component {
       <div className="issues_container">
         <div style={{ marginBottom: "12px" }}>
           <span className="ui huge header mx-3 mr-4">Issues</span>
-          <span className="ui tiny header">200 Open issues. 4 Resolved.</span>
+          <span className="ui tiny header">{this.state.openIssues} Open issues. {this.state.resolvedIssues} Resolved.</span>
           <Menu pointing secondary>
           <Menu.Item
               name="all"
@@ -187,7 +222,7 @@ class Issues extends Component {
               active={activeItem === "resolved"}
               onClick={this.handleItemClick}
             />
-            <Menu.Item
+            {/* <Menu.Item
               name="opened by me"
               active={activeItem === "opened by me"}
               onClick={this.handleItemClick}
@@ -196,7 +231,7 @@ class Issues extends Component {
               name="resolved by me"
               active={activeItem === "resolved by me"}
               onClick={this.handleItemClick}
-            />
+            /> */}
           </Menu>
         </div>
 
@@ -239,8 +274,11 @@ class Issues extends Component {
                       </Button.Content>
                     </Button>
                   )}
-                  {issue.author._id !== this.props.user._id && (
-                    <Button positive>Resolve</Button>
+                  {issue.author._id !== this.props.user._id && issue.resolved === "false" && (
+                    <Button positive onClick={() => this.resolveBtnClick(issue)}>Resolve</Button>
+                  )}
+                  {issue.author._id !== this.props.user._id && issue.resolved === "true" && (
+                    <Button positive disabled>Resolved</Button>
                   )}
                 </div>
               </Card.Content>

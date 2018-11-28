@@ -66,7 +66,7 @@ export function getIssues(url) {
 
 export function addIssue(issue) {
   return dispatch => {
-    fetch(`/api/issues`, {
+    fetch(`https://project-pescadero.herokuapp.com/api/issues`, {
       method: "post",
       body: JSON.stringify(issue)
     })
@@ -92,7 +92,7 @@ export function addIssue(issue) {
 
 export function removeIssue(index, id) {
   return dispatch => {
-    fetch(`/api/issues?id=${id}`, {
+    fetch(`https://project-pescadero.herokuapp.com/api/issues?id=${id}`, {
       method: "delete"
     })
       .then(response => {
@@ -118,7 +118,7 @@ export function removeIssue(index, id) {
 export function updateIssue(issue) {
   return dispatch => {
     console.log(JSON.stringify(issue))
-    fetch(`/api/issues?id=${issue._id}`, {
+    fetch(`https://project-pescadero.herokuapp.com/api/issues?id=${issue._id}`, {
       method: "put",
       body: JSON.stringify(issue)
     })

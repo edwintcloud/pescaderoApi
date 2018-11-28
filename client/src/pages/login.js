@@ -34,7 +34,7 @@ class Login extends Component {
   handleSubmit(e) {
     e.preventDefault();
     axios
-      .post("/api/users/login", this.state, { withCredentials: true })
+      .post("https://project-pescadero.herokuapp.com/api/users/login", this.state, { withCredentials: true })
       .then(res => {
         if (res.data.hasOwnProperty("error")) {
           console.log(res.data.error)

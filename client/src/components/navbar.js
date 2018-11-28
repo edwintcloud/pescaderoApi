@@ -17,7 +17,7 @@ class NavbarComponent extends Component {
   }
   logout() {
     axios
-      .post("/api/users/logout", { withCredentials: true })
+      .post("https://project-pescadero.herokuapp.com/api/users/logout", { withCredentials: true })
       .then(res => {
         removeCookie("session");
         window.location = "/";

@@ -106,7 +106,7 @@ class MapComponent extends Component {
   };
 
   componentDidMount() {
-    this.props.getIssues(`/api/issues`);
+    this.props.getIssues(`https://project-pescadero.herokuapp.com/api/issues`);
     this.showCurrentLocation();
   }
 
@@ -133,7 +133,7 @@ class MapComponent extends Component {
   };
 
   markerClick = (id) => {
-    this.props.getIssues(`/api/issues?id=${id}`);
+    this.props.getIssues(`https://project-pescadero.herokuapp.com/api/issues?id=${id}`);
   }
 
   handleChange(event, data) {
@@ -161,7 +161,7 @@ class MapComponent extends Component {
 
   handleSubmit() {
     this.props.addIssue(this.state.issue);
-    this.props.getIssues(`/api/issues`);
+    this.props.getIssues(`https://project-pescadero.herokuapp.com/api/issues`);
     this.setState({modalVisible:false})
     window.location.reload();
   }

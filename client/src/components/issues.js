@@ -86,13 +86,13 @@ class Issues extends Component {
   handleItemClick = (e, { name }) => {
     switch (name) {
       case "all":
-        this.props.getIssues(`/api/issues`)
+        this.props.getIssues(`https://project-pescadero.herokuapp.com/api/issues`)
         break;
       case "open":
-        this.props.getIssues(`/api/issues?resolved=false`)
+        this.props.getIssues(`https://project-pescadero.herokuapp.com/api/issues?resolved=false`)
         break;
       case "resolved":
-        this.props.getIssues(`/api/issues?resolved=true`);
+        this.props.getIssues(`https://project-pescadero.herokuapp.com/api/issues?resolved=true`);
         break;
       case "opened by me":
         console.log("open");
@@ -145,10 +145,10 @@ class Issues extends Component {
   }
 
   updateCount() {
-    axios.get(`/api/issues?resolved=true`).then(res => {
+    axios.get(`https://project-pescadero.herokuapp.com/api/issues?resolved=true`).then(res => {
       this.setState({resolvedIssues: res.data.length});
     })
-    axios.get(`/api/issues?resolved=false`).then(res => {
+    axios.get(`https://project-pescadero.herokuapp.com/api/issues?resolved=false`).then(res => {
       this.setState({openIssues: res.data.length});
     })
   }

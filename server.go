@@ -45,7 +45,7 @@ func main() {
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 		AllowOriginFunc: func(origin string) bool {
-			return origin == "https://project-pescadero.now.sh/"
+			return origin == "https://project-pescadero.herokuapp.com/"
 		},
 		MaxAge: 12 * time.Hour,
 	}))

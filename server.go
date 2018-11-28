@@ -73,6 +73,6 @@ func main() {
 	})
 
 	// start the server
-	e.Run(":5000")
+	e.Run(":" + os.Getenv("PORT"))
 
 }

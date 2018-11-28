@@ -21,8 +21,10 @@ import (
 func main() {
 
 	// Load env variables
-	if err := godotenv.Load(); err != nil {
-		log.Fatal("Error loading .env file")
+	if _, ok := os.LookupEnv("MONGODB_URI"); !ok {
+		if err := godotenv.Load(); err != nil {
+			log.Fatal("Error loading .env file")
+		}
 	}
 
 	// Set gin mode

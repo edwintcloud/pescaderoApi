@@ -29,7 +29,7 @@ func main() {
 	gin.SetMode(gin.DebugMode)
 
 	// connect to mongodb
-	db := db.Connect(os.Getenv("DB_URI"), os.Getenv("DB_NAME"))
+	db := db.Connect(os.Getenv("MONGODB_URI"), os.Getenv("DB_NAME"))
 	defer db.Close()
 
 	// create new instance of gin with default middlewares
@@ -37,13 +37,13 @@ func main() {
 
 	// setup CORS
 	e.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowOrigins:     []string{"https://project-pescadero.now.sh/"},
 		AllowMethods:     []string{"POST", "GET", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Origin", "Content-Type"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 		AllowOriginFunc: func(origin string) bool {
-			return origin == "http://localhost:5000"
+			return origin == "https://project-pescadero.now.sh/"
 		},
 		MaxAge: 12 * time.Hour,
 	}))

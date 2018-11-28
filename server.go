@@ -31,7 +31,7 @@ func main() {
 	gin.SetMode(gin.DebugMode)
 
 	// connect to mongodb
-	db := db.Connect(os.Getenv("MONGODB_URI"), os.Getenv("DB_NAME"))
+	db := db.Connect(os.Getenv("MONGODB_URI"))
 	defer db.Close()
 
 	// create new instance of gin with default middlewares

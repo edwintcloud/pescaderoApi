@@ -39,15 +39,12 @@ func main() {
 
 	// setup CORS
 	e.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"https://project-pescadero.now.sh/"},
+		AllowOrigins:     []string{"https://project-pescadero.now.sh", "http://localhost:3000"},
 		AllowMethods:     []string{"POST", "GET", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Origin", "Content-Type"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
-		AllowOriginFunc: func(origin string) bool {
-			return origin == "https://project-pescadero.herokuapp.com/"
-		},
-		MaxAge: 12 * time.Hour,
+		MaxAge:           12 * time.Hour,
 	}))
 
 	// Serve frontend static files

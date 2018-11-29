@@ -7,6 +7,7 @@ import Index from './pages/index';
 import Dashboard from './pages/dashboard';
 import SignUp from './pages/signup';
 import Login from './pages/login';
+import Team from './pages/team';
 
 class App extends Component {
   render() {
@@ -17,6 +18,7 @@ class App extends Component {
          <Route exact path="/signup" component={SignUp} />
          <Route exact path="/login" component={Login} />
          <Route exact path="/dashboard" component={Dashboard} />
+         <Route exact path="/team" component={Team} />
       </div>
       </HashRouter>
     );

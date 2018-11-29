@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "name": "project-pescadero",
+  "alias": "project-pescadero.now.sh",
+  "env": {
+    "REACT_APP_GOOGLE_MAPS_API_KEY": "@maps-api-key"
+  },
+  "routes": [
+    { "src": "/api.*", "dest": "https://project-pescadero.herokuapp.com" },
+    { "src": "/dashboard", "dest": "/" }
+  ]
+}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { HashRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'semantic-ui-css/semantic.min.css';
 import './assets/css/App.css';
@@ -12,7 +12,7 @@ import Team from './pages/team';
 class App extends Component {
   render() {
     return (
-      <HashRouter> 
+      <BrowserRouter> 
       <div className="page_container">   
          <Route exact path="/" component={Index} />
          <Route exact path="/signup" component={SignUp} />
@@ -20,7 +20,7 @@ class App extends Component {
          <Route exact path="/dashboard" component={Dashboard} />
          <Route exact path="/team" component={Team} />
       </div>
-      </HashRouter>
+      </BrowserRouter>
     );
   }
 }

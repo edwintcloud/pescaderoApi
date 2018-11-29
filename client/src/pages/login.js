@@ -34,7 +34,7 @@ class Login extends Component {
   handleSubmit(e) {
     e.preventDefault();
     axios
-      .post("https://project-pescadero.herokuapp.com/api/users/login", this.state, { withCredentials: true })
+      .post("/api/users/login", this.state, { withCredentials: true })
       .then(res => {
         if (res.data.hasOwnProperty("error")) {
           console.log(res.data.error)
@@ -44,7 +44,7 @@ class Login extends Component {
             this.setState({ emailInvalid: true });
           } 
         } else {
-          window.location = "#/dashboard";
+          window.location = "/";
         }
       })
       .catch(err => {

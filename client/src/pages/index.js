@@ -7,7 +7,7 @@ import { Redirect } from 'react-router-dom';
 
 class IndexPage extends Component {
   componentDidMount() {
-    this.props.fetchData("https://project-pescadero.herokuapp.com/api/users/current");
+    this.props.fetchData("/api/users/current");
   }
 
   render() {

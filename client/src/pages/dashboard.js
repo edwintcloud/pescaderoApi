@@ -2,25 +2,23 @@ import React, { Component } from 'react';
 import Map from '../components/map';
 import NavbarComponent from '../components/navbar';
 import DashboardHome from './dashboard-home';
-import { BrowserRouter, Route, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { connect } from "react-redux";
 
 class Dashboard extends Component {
 
   render() {
-    if (!this.props.user.hasOwnProperty('_id')) {
-      return <Redirect to='/' />
+    if (!this.props.user.hasOwnProperty('firstName')) {
+      console.log(this.props.user)
     }
     return (
-      <BrowserRouter basename="/dashboard">
       <div style={{width:'100%'}}>
         <NavbarComponent />
       <div className="dashboard_container">
         <Map></Map>
-        <Route exact path="/" component={DashboardHome} />
+        <DashboardHome />
       </div>
       </div>
-      </BrowserRouter>
     )
   }
 }

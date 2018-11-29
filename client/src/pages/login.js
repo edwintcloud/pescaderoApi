@@ -44,7 +44,7 @@ class Login extends Component {
             this.setState({ emailInvalid: true });
           } 
         } else {
-          window.location = "/dashboard";
+          window.location = "#/dashboard";
         }
       })
       .catch(err => {

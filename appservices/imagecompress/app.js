@@ -5,11 +5,11 @@ const PORT = process.env.PORT || 7000
 const avatar = require('./models/avatar.js');
 const bodyParser = require('body-parser');
 
+
 mongoose.connect('mongodb://localhost:27017/userimages', { useNewUrlParser: true })
     .catch(err => {
         throw err;
     });
-
 
 
 // parse application/x-www-form-urlencoded

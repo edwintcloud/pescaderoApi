@@ -4,6 +4,9 @@
   "description": "An image compression and hosting server ",
   "main": "app.js",
   "author": "Carlos Alba ",
+  "scripts": {
+    "start":"node app.js"
+  },
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.18.3",

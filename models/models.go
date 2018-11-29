@@ -4,26 +4,27 @@ import (
 	"errors"
 	"regexp"
 
+	"github.com/globalsign/mgo/bson"
 	"golang.org/x/crypto/bcrypt"
 )
 
 // City model
 type City struct {
-	ID      interface{} `json:"_id,omitempty" bson:"_id,omitempty"`
-	Name    string      `bson:"name" json:"name" binding:"required"`
-	State   string      `bson:"state" json:"state" binding:"required"`
-	Country string      `bson:"country" json:"country" binding:"required"`
+	ID      bson.ObjectId `json:"_id,omitempty" bson:"_id,omitempty"`
+	Name    string        `bson:"name" json:"name" binding:"required"`
+	State   string        `bson:"state" json:"state" binding:"required"`
+	Country string        `bson:"country" json:"country" binding:"required"`
 }
 
 // User model
 type User struct {
-	ID        interface{} `bson:"_id,omitempty" json:"_id,omitempty"`
-	Avatar    string      `bson:"avatar" json:"avatar"`
-	FirstName string      `bson:"firstName" json:"firstName" binding:"required"`
-	LastName  string      `bson:"lastName" json:"lastName" binding:"required"`
-	Email     string      `bson:"email" json:"email" binding:"required"`
-	Password  string      `bson:"password" json:"password" binding:"required"`
-	City      interface{} `bson:"city,omitempty" json:"city,omitempty"`
+	ID        bson.ObjectId `bson:"_id,omitempty" json:"_id,omitempty"`
+	Avatar    string        `bson:"avatar" json:"avatar"`
+	FirstName string        `bson:"firstName" json:"firstName" binding:"required"`
+	LastName  string        `bson:"lastName" json:"lastName" binding:"required"`
+	Email     string        `bson:"email" json:"email" binding:"required"`
+	Password  string        `bson:"password" json:"password" binding:"required"`
+	City      bson.ObjectId `bson:"city,omitempty" json:"city,omitempty"`
 }
 
 // Login model
@@ -40,12 +41,12 @@ type LocationObject struct {
 
 // Issue model
 type Issue struct {
-	ID          interface{}    `json:"_id,omitempty" bson:"_id,omitempty" structs:"_id"`
+	ID          bson.ObjectId  `json:"_id,omitempty" bson:"_id,omitempty" structs:"_id"`
 	Title       string         `bson:"title" json:"title" structs:"title"`
 	Description string         `bson:"description" json:"description" structs:"description"`
-	Author      interface{}    `json:"author" bson:"author" structs:"author"`
-	ResolvedBy  interface{}    `json:"resolvedBy,omitempty" bson:"resolvedBy,omitempty" structs:"resolvedBy"`
-	City        interface{}    `json:"city" bson:"city" structs:"city"`
+	Author      bson.ObjectId  `json:"author" bson:"author" structs:"author"`
+	ResolvedBy  bson.ObjectId  `json:"resolvedBy,omitempty" bson:"resolvedBy,omitempty" structs:"resolvedBy"`
+	City        bson.ObjectId  `json:"city" bson:"city" structs:"city"`
 	Location    LocationObject `bson:"location" json:"location" structs:"location"`
 	Resolved    string         `bson:"resolved" json:"resolved" structs:"resolved"`
 }

@@ -28,6 +28,7 @@ func Register(e *gin.Engine) {
 	routes := e.Group("/api")
 	{
 		routes.GET("/issues", c.getIssues)
+		routes.GET("/issues/:userID", c.getUserIssues)
 		routes.POST("/issues", c.createIssue)
 		routes.PUT("/issues", c.updateIssue)
 		routes.DELETE("/issues", c.deleteIssue)
@@ -118,6 +119,7 @@ func (*issuesController) getIssues(c *gin.Context) {
 		})
 	} else {
 		c.JSON(200, result)
+		return
 	}
 }
 
@@ -253,4 +255,39 @@ func (*issuesController) deleteIssue(c *gin.Context) {
 			"message": fmt.Sprintf("Issue with _id %s successfully deleted!", id),
 		})
 	}
+}
+
+//Get issues a creator has made by id
+func (*issuesController) getUserIssues(c *gin.Context) {
+
+	var err error
+	var userID string
+	result := []issue.Issue{}
+
+	userID = c.Query("userID")
+
+	// make sure userID was passed and that the user id is valid.
+	if userID == "" {
+		err = errors.New("no userID param specified")
+	}
+
+	if err == nil && !bson.IsObjectIdHex(userID) {
+		err = errors.New("not a valid userID")
+	}
+
+	// get docs
+	if err == nil {
+		d.Find(bson.M{"author": bson.ObjectIdHex(userID)}).All(&result)
+	}
+
+	// send back results
+	if err != nil {
+		c.JSON(200, gin.H{
+			"error": err.Error(),
+		})
+	} else {
+		c.JSON(200, result)
+		return
+	}
+
 }

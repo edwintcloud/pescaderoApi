@@ -2,7 +2,8 @@ package cities
 
 import (
 	"fmt"
-	"pescaderoApi/models/city"
+	// "pescaderoApi/models/city"
+	"pescaderoApi/models"
 	"pescaderoApi/utils/db"
 
 	"github.com/globalsign/mgo/bson"
@@ -34,7 +35,9 @@ func Register(e *gin.Engine) {
 
 // FIND CITIES BY QUERY OR LIST ALL
 func (*citiesController) getCities(c *gin.Context) {
-	cities := []city.City{}
+
+	// cities := []city.City{}
+	cities := []models.City{}
 	filter := make(map[string]string)
 	for k, v := range c.Request.URL.Query() {
 		filter[k] = v[0] // fixes query value being a slice of strings
@@ -61,7 +64,8 @@ func (*citiesController) getCities(c *gin.Context) {
 
 // CREATE ONE
 func (*citiesController) createCity(c *gin.Context) {
-	city := city.City{}
+	// city := city.City{}
+	city := models.City{}
 
 	if err := c.ShouldBindJSON(&city); err == nil {
 		if err := d.Insert(&city); err == nil {
@@ -80,7 +84,8 @@ func (*citiesController) createCity(c *gin.Context) {
 // UPDATE CITY BY ID QUERY
 func (*citiesController) updateCity(c *gin.Context) {
 	if id := c.Query("id"); id != "" && bson.IsObjectIdHex(id) {
-		updates := city.City{}
+		// updates := city.City{}
+		updates := models.City{}
 
 		if c.ShouldBindJSON(&updates) == nil {
 			if err := d.UpdateId(bson.ObjectIdHex(id), updates); err == nil {

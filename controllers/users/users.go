@@ -173,10 +173,7 @@ func (*usersController) loginUser(c *gin.Context) {
 	} else {
 		// set session
 		session := sessions.Default(c)
-		// set password to empty so we don't expose it
-		foundUser.Password = ""
-		bytes, _ := bson.Marshal(&foundUser)
-		session.Set("user", string(bytes))
+		session.Set("user", foundUser.ID.Hex())
 		session.Save()
 
 		c.JSON(200, gin.H{
@@ -202,8 +199,16 @@ func (*usersController) getCurrentUser(c *gin.Context) {
 	currentUser := user.User{}
 	currentSession := session.Get("user")
 	if currentSession != nil {
-		bson.Unmarshal([]byte(currentSession.(string)), &currentUser)
-		c.JSON(200, currentUser)
+		err := d.FindId(bson.ObjectIdHex(currentSession.(string))).One(&currentUser)
+		currentUser.Password = ""
+		if err == nil {
+			c.JSON(200, currentUser)
+		} else {
+			c.JSON(200, gin.H{
+				"message": "an error occurred",
+			})
+		}
+
 	} else {
 		c.JSON(200, gin.H{
 			"message": "no user logged in",

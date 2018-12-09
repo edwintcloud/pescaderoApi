@@ -36,7 +36,7 @@ func Register(e *gin.Engine) {
 	{
 		routes.GET("", c.getUsers)
 		routes.POST("", c.createUser)
-		// e.PUT("/users", c.updateUser)
+		routes.PUT("", c.updateUser)
 		// e.DELETE("/users", c.deleteUser)
 		routes.POST("/login", c.loginUser)
 		routes.POST("/logout", c.logoutUser)
@@ -113,43 +113,54 @@ func (*usersController) createUser(c *gin.Context) {
 	}
 }
 
-// // UPDATE User BY ID QUERY
-// func (*usersController) updateUser(c *gin.Context) {
-// 	if id := c.Query("_id"); id != "" && bson.IsObjectIdHex(id) {
-// 		user := user.User{}
+// update user avatar
+func (*usersController) updateUser(c *gin.Context) {
+	var err error
+	var id string
+	updates := bson.M{}
+	result := user.User{}
 
-// 		if c.ShouldBindJSON(&user) == nil {
-// 			if user.CheckValid(&user) == nil {
-// 				if err := d.UpdateId(bson.ObjectIdHex(id), user.HashPassword(&user)); err == nil {
-// 					c.JSON(200, gin.H{
-// 						"message": fmt.Sprintf("User %s successfully updated!", user.FirstName),
-// 					})
-// 					return
-// 				}
-// 			}
-// 		}
-// 	}
+	// make sure query params id is specified and a valid objectid
+	if id = c.Query("id"); id == "" {
+		err = errors.New("no id param specified")
+	}
+	if err == nil && !bson.IsObjectIdHex(id) {
+		err = errors.New("not a valid ObjectId")
+	}
 
-// 	c.JSON(400, gin.H{
-// 		"error": "Bad request - Unable to update user!",
-// 	})
-// }
+	// find by id
+	if err == nil {
+		d.FindId(bson.ObjectIdHex(id)).One(&result)
+	}
 
-// // DELETE User BY ID QUERY
-// func (*usersController) deleteUser(c *gin.Context) {
-// 	if id := c.Query("_id"); id != "" && bson.IsObjectIdHex(id) {
-// 		if d.RemoveId(bson.ObjectIdHex(id)) == nil {
-// 			c.JSON(200, gin.H{
-// 				"message": fmt.Sprintf("User with _id %s successfully deleted!", id),
-// 			})
-// 			return
-// 		}
-// 	}
+	// bind req body to bson m
+	if err == nil {
+		err = c.ShouldBindJSON(&updates)
+	}
 
-// 	c.JSON(400, gin.H{
-// 		"error": "Bad request - Unable to delete User!",
-// 	})
-// }
+	// make changes to result based on req body
+	if val, ok := updates["avatar"]; ok {
+		result.Avatar = val.(string)
+	} else {
+		err = errors.New("avatar field missing")
+	}
+
+	// update document in db
+	if err == nil {
+		err = d.UpdateId(bson.ObjectIdHex(id), result)
+	}
+
+	// return result
+	if err != nil {
+		c.JSON(200, gin.H{
+			"error": err.Error(),
+		})
+	} else {
+		c.JSON(200, gin.H{
+			"message": "user updated",
+		})
+	}
+}
 
 // login a user
 func (*usersController) loginUser(c *gin.Context) {

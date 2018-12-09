@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"pescaderoApi/models/issue"
 	"pescaderoApi/utils/db"
-	"reflect"
 
-	"github.com/fatih/structs"
 	"github.com/gin-gonic/gin"
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
@@ -62,6 +60,12 @@ func (*issuesController) getIssues(c *gin.Context) {
 					"as":           "author",
 				}},
 				{"$lookup": bson.M{
+					"from":         "users",
+					"localField":   "resolvedBy",
+					"foreignField": "_id",
+					"as":           "resolvedBy",
+				}},
+				{"$lookup": bson.M{
 					"from":         "cities",
 					"localField":   "city",
 					"foreignField": "_id",
@@ -72,6 +76,9 @@ func (*issuesController) getIssues(c *gin.Context) {
 					"description": 1,
 					"location":    1,
 					"resolved":    1,
+					"resolvedBy": bson.M{
+						"$arrayElemAt": []interface{}{"$resolvedBy", 0},
+					},
 					"author": bson.M{
 						"$arrayElemAt": []interface{}{"$author", 0},
 					},
@@ -91,6 +98,12 @@ func (*issuesController) getIssues(c *gin.Context) {
 				"as":           "author",
 			}},
 			{"$lookup": bson.M{
+				"from":         "users",
+				"localField":   "resolvedBy",
+				"foreignField": "_id",
+				"as":           "resolvedBy",
+			}},
+			{"$lookup": bson.M{
 				"from":         "cities",
 				"localField":   "city",
 				"foreignField": "_id",
@@ -101,6 +114,9 @@ func (*issuesController) getIssues(c *gin.Context) {
 				"description": 1,
 				"location":    1,
 				"resolved":    1,
+				"resolvedBy": bson.M{
+					"$arrayElemAt": []interface{}{"$resolvedBy", 0},
+				},
 				"author": bson.M{
 					"$arrayElemAt": []interface{}{"$author", 0},
 				},
@@ -160,14 +176,14 @@ func (*issuesController) updateIssue(c *gin.Context) {
 		err = issue.CheckValid()
 	}
 
-	// convert issue struct to map and delete empty fields
-	reqBody := structs.Map(&issue)
-	for k := range reqBody {
-		if reflect.DeepEqual(reqBody[k], reflect.Zero(reflect.TypeOf(reqBody[k])).Interface()) {
-			delete(reqBody, k)
-		}
-	}
-	fmt.Println(reqBody)
+	// // convert issue struct to map and delete empty fields
+	// reqBody := structs.Map(&issue)
+	// for k := range reqBody {
+	// 	if reflect.DeepEqual(reqBody[k], reflect.Zero(reflect.TypeOf(reqBody[k])).Interface()) {
+	// 		delete(reqBody, k)
+	// 	}
+	// }
+	// fmt.Println(reqBody)
 
 	// make sure query params id is specified and a valid objectid
 	if id = c.Query("id"); id == "" {
@@ -179,7 +195,7 @@ func (*issuesController) updateIssue(c *gin.Context) {
 
 	// update document in db
 	if err == nil {
-		err = d.UpdateId(bson.ObjectIdHex(id), reqBody)
+		err = d.UpdateId(bson.ObjectIdHex(id), issue)
 	}
 
 	// find updated document
@@ -195,6 +211,12 @@ func (*issuesController) updateIssue(c *gin.Context) {
 				"as":           "author",
 			}},
 			{"$lookup": bson.M{
+				"from":         "users",
+				"localField":   "resolvedBy",
+				"foreignField": "_id",
+				"as":           "resolvedBy",
+			}},
+			{"$lookup": bson.M{
 				"from":         "cities",
 				"localField":   "city",
 				"foreignField": "_id",
@@ -205,6 +227,9 @@ func (*issuesController) updateIssue(c *gin.Context) {
 				"description": 1,
 				"location":    1,
 				"resolved":    1,
+				"resolvedBy": bson.M{
+					"$arrayElemAt": []interface{}{"$resolvedBy", 0},
+				},
 				"author": bson.M{
 					"$arrayElemAt": []interface{}{"$author", 0},
 				},

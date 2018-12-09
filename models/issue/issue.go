@@ -30,7 +30,7 @@ type Result struct {
 	Title       string         `bson:"title" json:"title" binding:"required" structs:"title"`
 	Description string         `bson:"description" json:"description" binding:"required" structs:"description"`
 	Author      UserResult     `json:"author" bson:"author" binding:"required" structs:"author"`
-	ResolvedBy  bson.ObjectId  `json:"resolvedBy,omitempty" bson:"resolvedBy,omitempty" structs:"resolvedBy"`
+	ResolvedBy  UserResult     `json:"resolvedBy,omitempty" bson:"resolvedBy,omitempty" structs:"resolvedBy"`
 	City        CityResult     `json:"city" bson:"city" binding:"required" structs:"city"`
 	Location    LocationObject `bson:"location" json:"location" binding:"required" structs:"location"`
 	Resolved    string         `bson:"resolved" json:"resolved" binding:"required" structs:"resolved"`
@@ -61,8 +61,8 @@ func (m Issue) CheckValid() error {
 		return errors.New("title must be at least 6 characters long")
 	}
 
-	if len(m.Description) < 49 {
-		return errors.New("description must be at least 50 characters")
+	if len(m.Description) < 5 {
+		return errors.New("description must be at least 6 characters")
 	}
 
 	return nil

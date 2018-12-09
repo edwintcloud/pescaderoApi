@@ -222,16 +222,6 @@ class Issues extends Component {
               active={activeItem === "resolved"}
               onClick={this.handleItemClick}
             />
-            {/* <Menu.Item
-              name="opened by me"
-              active={activeItem === "opened by me"}
-              onClick={this.handleItemClick}
-            />
-            <Menu.Item
-              name="resolved by me"
-              active={activeItem === "resolved by me"}
-              onClick={this.handleItemClick}
-            /> */}
           </Menu>
         </div>
 

@@ -34,7 +34,7 @@ func Register(e *gin.Engine) {
 	//routes
 	routes := e.Group("/api/users")
 	{
-		routes.GET("", c.getUsers)
+		// routes.GET("", c.getUsers)
 		routes.POST("", c.createUser)
 		routes.PUT("", c.updateUser)
 		// e.DELETE("/users", c.deleteUser)
@@ -45,37 +45,37 @@ func Register(e *gin.Engine) {
 }
 
 // FIND Users BY QUERY OR LIST ALL
-func (*usersController) getUsers(c *gin.Context) {
-	var err error
-	users := []user.User{}
+// func (*usersController) getUsers(c *gin.Context) {
+// 	var err error
+// 	users := []user.User{}
 
-	// make query params into a map string:string
-	filter := make(map[string]string)
-	for k, v := range c.Request.URL.Query() {
-		filter[k] = v[0]
-	}
+// 	// make query params into a map string:string
+// 	filter := make(map[string]string)
+// 	for k, v := range c.Request.URL.Query() {
+// 		filter[k] = v[0]
+// 	}
 
-	// find by id if id is a query param, otherwise find all that match query params
-	if id, exists := filter["id"]; exists {
-		if !bson.IsObjectIdHex(id) {
-			err = errors.New("not a valid ObjectId")
-		}
-		if err == nil {
-			err = d.FindId(bson.ObjectIdHex(id)).All(&users)
-		}
-	} else {
-		err = d.Find(filter).All(&users)
-	}
+// 	// find by id if id is a query param, otherwise find all that match query params
+// 	if id, exists := filter["id"]; exists {
+// 		if !bson.IsObjectIdHex(id) {
+// 			err = errors.New("not a valid ObjectId")
+// 		}
+// 		if err == nil {
+// 			err = d.FindId(bson.ObjectIdHex(id)).All(&users)
+// 		}
+// 	} else {
+// 		err = d.Find(filter).All(&users)
+// 	}
 
-	// return results
-	if err != nil {
-		c.JSON(200, gin.H{
-			"error": err.Error(),
-		})
-	} else {
-		c.JSON(200, users)
-	}
-}
+// 	// return results
+// 	if err != nil {
+// 		c.JSON(200, gin.H{
+// 			"error": err.Error(),
+// 		})
+// 	} else {
+// 		c.JSON(200, users)
+// 	}
+// }
 
 // CREATE ONE
 func (*usersController) createUser(c *gin.Context) {

@@ -40,7 +40,7 @@ func main() {
 	// setup CORS
 	e.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"https://project-pescadero.now.sh", "http://localhost:3000", "https://staging-project-pescadero.now.sh"},
-		AllowMethods:     []string{"POST", "GET", "PUT", "DELETE"},
+		AllowMethods:     []string{"POST", "GET", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,

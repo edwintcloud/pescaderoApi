@@ -52,9 +52,9 @@ func main() {
 
 	// setup sessions
 	store := cookie.NewStore([]byte(os.Getenv("COOKIE_SECRET")))
-	// store.Options(sessions.Options{
-	// 	HttpOnly: true,
-	// })
+	store.Options(sessions.Options{
+		HttpOnly: true,
+	})
 	e.Use(sessions.Sessions("session", store))
 
 	// register controller routes

@@ -54,6 +54,7 @@ func main() {
 	store := cookie.NewStore([]byte(os.Getenv("COOKIE_SECRET")))
 	store.Options(sessions.Options{
 		HttpOnly: true,
+		Path:     "/",
 	})
 	e.Use(sessions.Sessions("session", store))
 

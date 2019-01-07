@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"pescaderoApi/controllers/cities"
-	"pescaderoApi/controllers/issues"
-	"pescaderoApi/controllers/users"
 	"time"
 
-	"pescaderoApi/utils/db"
+	"github.com/edwintcloud/pescaderoApi/controllers/cities"
+	"github.com/edwintcloud/pescaderoApi/controllers/issues"
+	"github.com/edwintcloud/pescaderoApi/controllers/users"
+
+	"github.com/edwintcloud/pescaderoApi/utils/db"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"

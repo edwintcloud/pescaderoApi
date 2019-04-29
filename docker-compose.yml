@@ -1,0 +1,28 @@
+version: "3.7"
+
+services:
+  pescadero-db:
+    image: mongo
+    restart: always
+    ports:
+      - 27019:27017
+    volumes:
+      - ./data:/data/db
+  pescadero-server:
+    build: ./server
+    ports:
+      - 5000:5000
+    environment:
+      - PORT=${PORT}
+      - MONGODB_URI=${MONGODB_URI}
+      - COOKIE_SECRET=${COOKIE_SECRET}
+    depends_on:
+      - pescadero-db
+  # Client
+  pescadero-client:
+    image: node:10.15-alpine
+    command: /bin/sh -c 'cd client && npm i && npm run dev;'
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client:/client

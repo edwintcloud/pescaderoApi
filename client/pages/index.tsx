@@ -281,7 +281,7 @@ class IndexPage extends React.Component<IProps, IState> {
         signupError: "",
         currentUser: {
           ...this.state.currentUser,
-          city: this.state.cities[0].value
+          city: this.state.cities.length > 0 && this.state.cities[0].value || ""
         }
       });
     };

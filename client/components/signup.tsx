@@ -78,8 +78,7 @@ export const Signup = props => (
             (!props.confirmPasswordValue ||
               (props.confirmPasswordValue &&
                 props.confirmPasswordValue.length < 2)) ||
-            (!props.cityValue ||
-              (props.cityValue && props.cityValue.length < 2))
+            (!props.cityValue && props.cityOptions.length !== 0)
           }
         >
           Sign Up

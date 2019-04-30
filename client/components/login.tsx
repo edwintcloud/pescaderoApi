@@ -1,6 +1,17 @@
-import { Button, Form, Message } from "semantic-ui-react";
+import { Button, Form, Message } from 'semantic-ui-react';
+import React from 'react';
 
-export const Login = props => (
+interface Props {
+  onSubmit?: React.FormEventHandler;
+  inputsChange?: React.ChangeEventHandler;
+  emailValue?: string;
+  passwordValue?: string;
+  loadLandingClick?: React.MouseEventHandler;
+  loginError?: string;
+  signupClick?: React.MouseEventHandler;
+}
+
+export const Login = (props: Props): JSX.Element => (
   <div className="landing_container">
     <h1 className="login_title">Log In</h1>
     <div className="login_container">
@@ -29,25 +40,20 @@ export const Login = props => (
           disabled={
             !props.emailValue ||
             (props.emailValue && props.emailValue.length < 2) ||
-            (!props.passwordValue ||
-              (props.passwordValue && props.passwordValue.length < 2))
+            (!props.passwordValue || (props.passwordValue && props.passwordValue.length < 2))
           }
         >
           Login
         </Button>
-        <Button
-          className="landing_button left floated"
-          onClick={props.loadLandingClick}
-        >
+        <Button className="landing_button left floated" onClick={props.loadLandingClick}>
           Back
         </Button>
       </Form>
-      {props.loginError != "" && (
+      {props.loginError != '' && (
         <Message error attached="bottom">
-          {(props.loginError != "not found" && props.loginError) || (
+          {(props.loginError != 'not found' && props.loginError) || (
             <>
-              Account does not exist, please{" "}
-              <a onClick={props.signupClick}>signup</a>{" "}
+              Account does not exist, please <a onClick={props.signupClick}>signup</a>{' '}
             </>
           )}
         </Message>

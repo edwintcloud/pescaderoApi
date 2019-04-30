@@ -1,30 +1,13 @@
 # pescaderoApi
-Project pescadero mono-repo. Frontend is located in `/client`. Backend is in root. This project also uses my avatarMate API which is live at [https://avatarmate.herokuapp.com/](https://avatarmate.herokuapp.com/).
 
-## Environment
-This project uses a .env file which is not uploaded to github, please see .env-example file for reference.
+Project Pescadero is a dashboard for reporting neighborhood/city issues. It's purpose is to assist in resolving existing issues and to help users build a community service profile. Visit our site today at [project-pescadero.now.sh](https://project-pescadero.now.sh)!
 
-## Database
-This project also uses MongoDB, make sure the latest version is installed and `mongod` is running.
+## Getting Started With Development
 
-## Client
-Make sure you have latest version of Node and NPM.
-```sh
-cd client
-npm i
-```
-To run the client for development:
-```sh
-npm run dev
-```
+Developing locally with the project is easy! Follow the steps below:
 
-## Server
-Make sure you have govendor installed and `$GOPATH/bin` in your path. Go should be installed and your go path should be setup correctly.
-```sh
-git clone https://github.com/edwintcloud/pescaderoApi.git pescaderoApi
-govendor sync
-```
-To run the server for development:
-```sh
-go run server.go
-```
+1. Clone the Repository.
+2. Create your own `.env` similar to the provided `.env-example` in the root of the repository.
+3. Build and Run: `docker-compose build && docker-compose up -d`
+
+All components are now running in Docker containers in the background. Live reload is available for the front-end, simply edit a file and see the changes instantly on [http://localhost:3000](http://localhost:3000).

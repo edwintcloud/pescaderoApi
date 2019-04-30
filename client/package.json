@@ -8,28 +8,52 @@
     "dev": "next",
     "build": "next build",
     "start": "next start -p 3000",
-    "deploy": "now -n project-pescadero && now alias",
+    "deploy": "now --target=production",
     "stage": "now -n project-pescadero-staging && now alias staging-project-pescadero.now.sh"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/next": "^7.0.5",
-    "@types/react": "^16.7.8",
-    "@types/react-dom": "^16.0.11",
+    "@types/next": "^8.0.1",
+    "@types/react": "^16.8.7",
+    "@types/react-dom": "^16.8.2",
+    "@types/semantic-ui": "^2.2.7",
+    "@types/styled-jsx": "^2.2.8",
     "@zeit/next-sass": "^1.0.1",
     "@zeit/next-typescript": "^1.1.1",
     "isomorphic-unfetch": "^3.0.0",
-    "next": "^7.0.2",
-    "node-sass": "^4.10.0",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3",
+    "next": "^8.0.3",
+    "node-sass": "^4.12.0",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
     "react-google-maps": "^9.4.5",
     "semantic-ui-react": "^0.83.0",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
-    "babel-plugin-transform-define": "^1.3.0"
+    "babel-plugin-transform-define": "^1.3.1",
+    "@typescript-eslint/eslint-plugin": "^1.6.0",
+    "@typescript-eslint/parser": "^1.6.0",
+    "babel-plugin-styled-components": "^1.10.0",
+    "eslint": "^5.16.0",
+    "eslint-config-prettier": "^4.1.0",
+    "eslint-plugin-prettier": "^3.0.1",
+    "eslint-plugin-react": "^7.12.4",
+    "husky": "^1.3.1",
+    "lint-staged": "^8.1.5",
+    "prettier": "^1.16.4",
+    "typescript": "^3.4.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,jsx}": [
+      "eslint . --fix",
+      "git add"
+    ]
   }
 }

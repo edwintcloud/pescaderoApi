@@ -1,6 +1,25 @@
-import { Button, Form, Message } from "semantic-ui-react";
+import { Button, Form, Message } from 'semantic-ui-react';
+import React from 'react';
 
-export const Signup = props => (
+interface Props {
+  onSubmit?: any;
+  inputsChange?: any;
+  firstNameValue?: any;
+  lastNameValue?: any;
+  emailValue?: any;
+  emailInvalid?: any;
+  passwordValue?: any;
+  passwordInvalid?: any;
+  confirmPasswordValue?: any;
+  confirmPasswordInvalid?: any;
+  cityOptions?: any;
+  cityValue?: any;
+  loadLandingClick?: any;
+  loginClick?: any;
+  signupError?: any;
+}
+
+export const Signup = (props: Props): JSX.Element => (
   <div className="landing_container">
     <h1 className="signup_title">Sign Up</h1>
     <div className="signup_container">
@@ -67,35 +86,25 @@ export const Signup = props => (
             props.emailInvalid ||
             props.passwordInvalid ||
             props.confirmPasswordInvalid ||
-            (!props.firstNameValue ||
-              (props.firstNameValue && props.firstNameValue.length < 2)) ||
-            (!props.lastNameValue ||
-              (props.lastNameValue && props.lastNameValue.length < 2)) ||
-            (!props.emailValue ||
-              (props.emailValue && props.emailValue.length < 2)) ||
-            (!props.passwordValue ||
-              (props.passwordValue && props.passwordValue.length < 2)) ||
-            (!props.confirmPasswordValue ||
-              (props.confirmPasswordValue &&
-                props.confirmPasswordValue.length < 2)) ||
+            (!props.firstNameValue || (props.firstNameValue && props.firstNameValue.length < 2)) ||
+            (!props.lastNameValue || (props.lastNameValue && props.lastNameValue.length < 2)) ||
+            (!props.emailValue || (props.emailValue && props.emailValue.length < 2)) ||
+            (!props.passwordValue || (props.passwordValue && props.passwordValue.length < 2)) ||
+            (!props.confirmPasswordValue || (props.confirmPasswordValue && props.confirmPasswordValue.length < 2)) ||
             (!props.cityValue && props.cityOptions.length !== 0)
           }
         >
           Sign Up
         </Button>
-        <Button
-          className="landing_button left floated"
-          onClick={props.loadLandingClick}
-        >
+        <Button className="landing_button left floated" onClick={props.loadLandingClick}>
           Back
         </Button>
       </Form>
-      {props.signupError != "" && (
+      {props.signupError != '' && (
         <Message error attached="bottom">
-          {(props.signupError.includes("duplicate") && (
+          {(props.signupError.includes('duplicate') && (
             <>
-              Account already made with this email, please{" "}
-              <a onClick={props.loginClick}>login</a>{" "}
+              Account already made with this email, please <a onClick={props.loginClick}>login</a>{' '}
             </>
           )) ||
             props.signupError}

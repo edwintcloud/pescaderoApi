@@ -1,14 +1,17 @@
-import {
-  Dropdown,
-  Menu,
-  Image,
-  DropdownDivider,
-  Button,
-  Message,
-  Icon
-} from "semantic-ui-react";
+import { Dropdown, Menu, Image, DropdownDivider, Button, Message, Icon } from 'semantic-ui-react';
+import React from 'react';
 
-export const NavBar = props => (
+interface Props {
+  messageVisible?: any;
+  dismissMessage?: any;
+  arrowDirection?: any;
+  arrowClick?: any;
+  user?: any;
+  fileChanged?: any;
+  logoutClick?: any;
+}
+
+export const NavBar = (props: Props): JSX.Element => (
   <Menu secondary className="navbar">
     <Menu.Item header>Project Pescadero</Menu.Item>
     {props.messageVisible && (
@@ -21,7 +24,14 @@ export const NavBar = props => (
         color="blue"
       />
     )}
-    <Icon link name={`arrow ${props.arrowDirection}`} size="big" className="down_arrow" circular onClick={props.arrowClick} />
+    <Icon
+      link
+      name={`arrow ${props.arrowDirection}`}
+      size="big"
+      className="down_arrow"
+      circular
+      onClick={props.arrowClick}
+    />
     {props.user && (
       <Dropdown
         icon={null}
@@ -36,14 +46,22 @@ export const NavBar = props => (
       >
         <Dropdown.Menu>
           <Dropdown.Header>
-            {(props.user.avatar && (
-              <Image avatar src={props.user.avatar} />
-            )) || <Image avatar src="https://via.placeholder.com/100" />}
+            {(props.user.avatar && <Image avatar src={props.user.avatar} />) || (
+              <Image avatar src="https://via.placeholder.com/100" />
+            )}
             <div className="right_flex">
-            <span>{props.user.firstName}</span>
-            <input id="avatar" name="avatar" type="file" className="file" accept=".png,.jpg,.jpeg" onChange={props.fileChanged}></input>
-            <label htmlFor="avatar" className="file">Change Avatar</label>
-            
+              <span>{props.user.firstName}</span>
+              <input
+                id="avatar"
+                name="avatar"
+                type="file"
+                className="file"
+                accept=".png,.jpg,.jpeg"
+                onChange={props.fileChanged}
+              />
+              <label htmlFor="avatar" className="file">
+                Change Avatar
+              </label>
             </div>
           </Dropdown.Header>
           <DropdownDivider />

@@ -121,3 +121,4 @@ typings/
 
 # End of https://www.gitignore.io/api/macos,visualstudiocode,node
 env-config.js
+.next

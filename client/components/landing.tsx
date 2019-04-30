@@ -1,6 +1,14 @@
-import { Button } from "semantic-ui-react";
+import { Button } from 'semantic-ui-react';
+import React from 'react';
 
-export const Landing = props => (
+interface Props {
+  title?: string;
+  subtitle?: string;
+  loginClick?: React.MouseEventHandler;
+  signupClick?: React.MouseEventHandler;
+}
+
+export const Landing = (props: Props): JSX.Element => (
   <div className="landing_container">
     <h1 className="landing_title">{props.title}</h1>
     <h3 className="landing_subtitle">{props.subtitle}</h3>

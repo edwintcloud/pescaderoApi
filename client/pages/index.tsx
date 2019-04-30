@@ -1,36 +1,24 @@
-import React from "react";
-import { Loader } from "semantic-ui-react";
-import {
-  NavBar,
-  Map,
-  Issues,
-  IssuesModal,
-  Landing,
-  Login,
-  Signup
-} from "../components";
+import React from 'react';
+import { Loader } from 'semantic-ui-react';
+import { NavBar, Map, Issues, IssuesModal, Landing, Login, Signup } from '../components';
 import 'isomorphic-unfetch';
 
-interface IProps {}
-
-interface IState {}
-
-class IndexPage extends React.Component<IProps, IState> {
-  state = {
+class IndexPage extends React.Component {
+  public state = {
     currentLocation: {
       lat: 37.78768,
-      lng: -122.41094
+      lng: -122.41094,
     },
     mapCenter: {
       lat: 37.78768,
-      lng: -122.41094
+      lng: -122.41094,
     },
     issues: [],
-    currentUser: {},
-    issuesNav: "all",
-    currentIssue: {},
+    currentUser: null,
+    issuesNav: 'all',
+    currentIssue: null,
     modalOpen: false,
-    modalTitle: "",
+    modalTitle: '',
     currentIssueTitleError: false,
     currentIssueDescError: false,
     loginOpen: false,
@@ -40,36 +28,38 @@ class IndexPage extends React.Component<IProps, IState> {
     signupConfirmPasswordInvalid: false,
     cities: [],
     loading: true,
-    loadingError: "",
-    selectedIssue: "",
+    loadingError: '',
+    selectedIssue: '',
     messageVisible: true,
-    loginError: "",
-    signupError: "",
-    arrowDirection: "down"
+    loginError: '',
+    signupError: '',
+    arrowDirection: 'down',
   };
 
-  getCurrentLocation = () => {
+  public getCurrentLocation = (): void => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(position => {
-        this.setState({
-          currentLocation: {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          },
-          mapCenter: {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          }
-        });
-      });
+      navigator.geolocation.getCurrentPosition(
+        (position): void => {
+          this.setState({
+            currentLocation: {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            },
+            mapCenter: {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            },
+          });
+        },
+      );
     }
   };
 
-  async componentDidMount() {
+  public async componentDidMount(): Promise<void> {
     this.getCurrentLocation();
     // initialize state
     this.setState({ loading: true });
-    this.setState({ loadingError: "" });
+    this.setState({ loadingError: '' });
     this.setState({ cities: [] });
     this.setState({ issues: [] });
     this.setState({ currentUser: {} });
@@ -79,7 +69,7 @@ class IndexPage extends React.Component<IProps, IState> {
       const citiesRes = await fetch(`${process.env.BACKEND_URL}/api/cities`);
       const issuesRes = await fetch(`${process.env.BACKEND_URL}/api/issues`);
       const currentUserRes = await fetch(`${process.env.BACKEND_URL}/api/users/current`, {
-        credentials: "include"
+        credentials: 'include',
       });
       if (!citiesRes.ok || !issuesRes.ok || !currentUserRes.ok) {
         throw new Error();
@@ -87,77 +77,78 @@ class IndexPage extends React.Component<IProps, IState> {
       const citiesData = await citiesRes.json();
       const issuesData = (await issuesRes.json()).reverse();
       const currentUser = await currentUserRes.json();
-      citiesData.map(i => {
-        this.setState({
-          cities: [
-            ...this.state.cities,
-            {
-              text: `${i.name}, ${i.state} (${i.country})`,
-              value: i._id
-            }
-          ]
-        });
-      });
+      citiesData.map(
+        (i): void => {
+          this.setState({
+            cities: [
+              ...this.state.cities,
+              {
+                text: `${i.name}, ${i.state} (${i.country})`,
+                value: i._id,
+              },
+            ],
+          });
+        },
+      );
       this.setState({ issues: issuesData });
       this.setState({
-        openIssues: issuesData.filter(i => i.resolved === "false").length
+        openIssues: issuesData.filter((i): boolean => i.resolved === 'false').length,
       });
       this.setState({
-        resolvedIssues: issuesData.filter(i => i.resolved === "true").length
+        resolvedIssues: issuesData.filter((i): boolean => i.resolved === 'true').length,
       });
       this.setState({ currentUser: currentUser });
       this.setState({ loading: false });
     } catch (e) {
       this.setState({ loading: false });
       this.setState({
-        loadingError:
-          "Website is currently undergoing maintenance. Please check back later!"
+        loadingError: 'Website is currently undergoing maintenance. Please check back later!',
       });
     }
   }
 
-  render() {
+  public render(): JSX.Element {
     // Add marker to map component
-    const mapAddMarker = event => {
+    const mapAddMarker = (event): void => {
       const location = {
         lat: String(event.lat()),
-        lng: String(event.lng())
+        lng: String(event.lng()),
       };
       this.setState({
         currentIssue: {
           location: location,
           author: this.state.currentUser._id,
           city: this.state.currentUser.city,
-          title: "",
-          description: ""
+          title: '',
+          description: '',
         },
         modalOpen: true,
-        modalTitle: "New Issue",
-        selectedIssue: "",
+        modalTitle: 'New Issue',
+        selectedIssue: '',
         messageVisible: false,
         currentIssueDescError: false,
-        currentIssueTitleError: false
+        currentIssueTitleError: false,
       });
     };
 
     // Issues NavBar onClick method
-    const issuesNavClick = (e, { name }) => {
+    const issuesNavClick = (e, { name }): void => {
       this.setState({
         issuesNav: name,
-        selectedIssue: ""
+        selectedIssue: '',
       });
     };
 
     // IssuesModal title and description on change method
-    const currentIssueChange = (event, data) => {
+    const currentIssueChange = (_, data): void => {
       // update current issue state
       this.setState({
         currentIssue: {
           ...this.state.currentIssue,
-          [data.name]: data.value
-        }
+          [data.name]: data.value,
+        },
       });
-      if (data.name === "description") {
+      if (data.name === 'description') {
         if (data.value.length < 5) {
           this.setState({ currentIssueDescError: true });
         } else {
@@ -173,43 +164,40 @@ class IndexPage extends React.Component<IProps, IState> {
     };
 
     // IssuesModal Close click
-    const modalClose = () => {
+    const modalClose = (): void => {
       this.setState({
         modalOpen: false,
         currentIssueDescError: false,
-        currentIssueTitleError: false
+        currentIssueTitleError: false,
       });
     };
 
     // IssuesModal Submit click
-    const modalSubmit = async () => {
+    const modalSubmit = async (): Promise<void> => {
       await this.setState({
         currentIssue: {
           ...this.state.currentIssue,
-          resolvedBy: null
-        }
+          resolvedBy: null,
+        },
       });
-      if (this.state.currentIssue.hasOwnProperty("resolved")) {
+      if (this.state.currentIssue.hasOwnProperty('resolved')) {
         // edit issue
         try {
-          const editIssueRes = await fetch(
-            `${process.env.BACKEND_URL}/api/issues?id=${this.state.currentIssue._id}`,
-            {
-              method: "PUT",
-              body: JSON.stringify(this.state.currentIssue)
-            }
-          );
+          const editIssueRes = await fetch(`${process.env.BACKEND_URL}/api/issues?id=${this.state.currentIssue._id}`, {
+            method: 'PUT',
+            body: JSON.stringify(this.state.currentIssue),
+          });
           if (!editIssueRes.ok) {
             throw new Error();
           }
-          const editIssueResData = await editIssueRes.json();
+          await editIssueRes.json();
           const issuesRes = await fetch(`${process.env.BACKEND_URL}/api/issues`);
           if (!issuesRes.ok) {
             throw new Error();
           }
           const issuesResData = await issuesRes.json();
           this.setState({
-            issues: issuesResData.reverse()
+            issues: issuesResData.reverse(),
           });
         } catch (e) {
           console.log(e);
@@ -219,13 +207,13 @@ class IndexPage extends React.Component<IProps, IState> {
         await this.setState({
           currentIssue: {
             ...this.state.currentIssue,
-            resolved: "false"
-          }
+            resolved: 'false',
+          },
         });
         try {
           const newIssueRes = await fetch(`${process.env.BACKEND_URL}/api/issues`, {
-            method: "POST",
-            body: JSON.stringify(this.state.currentIssue)
+            method: 'POST',
+            body: JSON.stringify(this.state.currentIssue),
           });
           if (!newIssueRes.ok) {
             throw new Error();
@@ -236,15 +224,13 @@ class IndexPage extends React.Component<IProps, IState> {
           }
           const issuesResData = await issuesRes.json();
           await this.setState({
-            issues: issuesResData.reverse()
+            issues: issuesResData.reverse(),
           });
-          const card = document.querySelector(
-            `.issues_cards > .card[tabindex="0"]`
-          );
+          const card = document.querySelector(`.issues_cards > .card[tabindex="0"]`);
           card.scrollIntoView();
           card.parentElement.scrollBy(0, -20);
-          card.focus();
-          setTimeout(() => card.blur(), 2000);
+          (card as any).focus();
+          setTimeout((): void => (card as any).blur(), 2000);
         } catch (e) {
           console.log(e);
         }
@@ -253,106 +239,106 @@ class IndexPage extends React.Component<IProps, IState> {
     };
 
     // Landing Login click
-    const loadLogin = () => {
+    const loadLogin = (): void => {
       this.setState({
         loginOpen: true,
         signupOpen: false,
-        loginError: "",
-        signupError: ""
+        loginError: '',
+        signupError: '',
       });
     };
 
     // Landing Login click
-    const loadLanding = () => {
+    const loadLanding = (): void => {
       this.setState({
         loginOpen: false,
         signupOpen: false,
-        loginError: "",
-        signupError: ""
+        loginError: '',
+        signupError: '',
       });
     };
 
     // Landing SignUp click
-    const loadSignup = () => {
+    const loadSignup = (): void => {
       this.setState({
         signupOpen: true,
         loginOpen: false,
-        loginError: "",
-        signupError: "",
+        loginError: '',
+        signupError: '',
         currentUser: {
           ...this.state.currentUser,
-          city: this.state.cities.length > 0 && this.state.cities[0].value || ""
-        }
+          city: (this.state.cities.length > 0 && this.state.cities[0].value) || '',
+        },
       });
     };
 
     // Login inputs on change
-    const loginInputsChange = (event, data) => {
+    const loginInputsChange = (event, data): void => {
       // update currentUser state
       this.setState({
         currentUser: {
           ...this.state.currentUser,
-          [data.name]: data.value
+          [data.name]: data.value,
         },
-        loginError: ""
+        loginError: '',
       });
     };
 
     // Login on Submit
-    const loginSubmit = async () => {
+    const loginSubmit = async (): Promise<void> => {
       try {
         const loginRes = await fetch(`${process.env.BACKEND_URL}/api/users/login`, {
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify(this.state.currentUser),
-          credentials: "include"
+          credentials: 'include',
         });
         if (!loginRes.ok) {
           throw new Error();
         }
         const loginResData = await loginRes.json();
-        if (loginResData.hasOwnProperty("error")) {
+        if (loginResData.hasOwnProperty('error')) {
           this.setState({ loginError: loginResData.error });
           return;
         }
         const currentUserRes = await fetch(`${process.env.BACKEND_URL}/api/users/current`, {
-          credentials: "include"
+          credentials: 'include',
         });
         if (!currentUserRes.ok) {
           throw new Error();
         }
         const currentUserResData = await currentUserRes.json();
-        await this.setState({ currentUser: currentUserResData, loginOpen: false, loginError: "" });
+        await this.setState({ currentUser: currentUserResData, loginOpen: false, loginError: '' });
       } catch (e) {
         console.log(e);
       }
-      this.setState({ loginOpen: false, loginError: "" });
+      this.setState({ loginOpen: false, loginError: '' });
     };
 
     // Signup inputs on change
-    const signupInputsChange = (event, data) => {
+    const signupInputsChange = (event, data): void => {
       // update currentUser state
       this.setState({
         currentUser: {
           ...this.state.currentUser,
-          [data.name]: data.value
-        }
+          [data.name]: data.value,
+        },
       });
 
-      if (data.name === "email") {
+      if (data.name === 'email') {
         if (/.+@.+\..+/.test(data.value)) {
           this.setState({ signupEmailInvalid: false });
         } else {
           this.setState({ signupEmailInvalid: true });
         }
       }
-      if (data.name === "password") {
+      if (data.name === 'password') {
         if (data.value.length > 5) {
           this.setState({ signupPasswordInvalid: false });
         } else {
           this.setState({ signupPasswordInvalid: true });
         }
       }
-      if (data.name === "confirmPassword") {
+      if (data.name === 'confirmPassword') {
         if (data.value === this.state.currentUser.password) {
           this.setState({ signupConfirmPasswordInvalid: false });
         } else {
@@ -362,41 +348,41 @@ class IndexPage extends React.Component<IProps, IState> {
     };
 
     // Signup on Submit
-    const signupSubmit = async () => {
+    const signupSubmit = async (): Promise<void> => {
       try {
         const signupRes = await fetch(`${process.env.BACKEND_URL}/api/users`, {
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify(this.state.currentUser),
-          credentials: "include"
+          credentials: 'include',
         });
         if (!signupRes.ok) {
           throw new Error();
         }
         const signupResData = await signupRes.json();
-        if (signupResData.hasOwnProperty("error")) {
+        if (signupResData.hasOwnProperty('error')) {
           this.setState({ signupError: signupResData.error });
           return;
         }
         await loginSubmit();
-        this.setState({ signupOpen: false, signupError: "" });
+        this.setState({ signupOpen: false, signupError: '' });
       } catch (e) {
         console.log(e);
       }
     };
 
     // Logout button on click
-    const logoutUser = async () => {
+    const logoutUser = async (): Promise<void> => {
       try {
         const logoutUserRes = await fetch(`${process.env.BACKEND_URL}/api/users/logout`, {
-          method: "POST",
-          credentials: "include"
+          method: 'POST',
+          credentials: 'include',
         });
 
         if (!logoutUserRes.ok) {
           throw new Error();
         }
         const currentUserRes = await fetch(`${process.env.BACKEND_URL}/api/users/current`, {
-          credentials: "include"
+          credentials: 'include',
         });
         if (!currentUserRes.ok) {
           throw new Error();
@@ -408,79 +394,76 @@ class IndexPage extends React.Component<IProps, IState> {
     };
 
     // Marker on click
-    const markerClick = (event, data) => {
+    const markerClick = (event, data): void => {
       if (data == undefined) {
         const location = {
           lat: String(event.latLng.lat()),
-          lng: String(event.latLng.lng())
+          lng: String(event.latLng.lng()),
         };
         this.setState({
           currentIssue: {
             location: location,
             author: this.state.currentUser._id,
-            city: this.state.currentUser.city
+            city: this.state.currentUser.city,
           },
           modalOpen: true,
-          modalTitle: "New Issue",
-          selectedIssue: ""
+          modalTitle: 'New Issue',
+          selectedIssue: '',
         });
       } else {
         this.setState({
           currentIssue: {
             ...data,
             author: data.author._id,
-            city: data.author.city
+            city: data.author.city,
           },
-          selectedIssue: data._id
+          selectedIssue: data._id,
         });
         const card = document.getElementById(data._id);
         card.scrollIntoView();
         card.parentElement.scrollBy(0, -20);
         card.focus();
-        setTimeout(() => card.blur(), 2000);
+        setTimeout((): void => card.blur(), 2000);
       }
     };
 
     // Issues edit button on click
-    const issuesEditClick = data => {
+    const issuesEditClick = (data): void => {
       this.setState({
         currentIssue: {
           ...data,
           author: data.author._id,
-          city: data.author.city
+          city: data.author.city,
         },
         modalOpen: true,
-        modalTitle: "Edit Issue",
-        selectedIssue: ""
+        modalTitle: 'Edit Issue',
+        selectedIssue: '',
       });
     };
 
     // Issues card on click
-    const issuesCardClick = data => {
+    const issuesCardClick = (data): void => {
       this.setState({
         selectedIssue: data._id,
         mapCenter: {
           lat: Number(data.location.lat),
-          lng: Number(data.location.lng)
-        }
+          lng: Number(data.location.lng),
+        },
       });
     };
 
     // Dismiss Message action
-    const dismissMessage = () => {
+    const dismissMessage = (): void => {
       this.setState({ messageVisible: false });
     };
 
     // Delete issue on click
-    const issuesDeleteClick = async data => {
+    const issuesDeleteClick = async (data): Promise<void> => {
       if (confirm(`Are you sure you want to delete the issue ${data.title}?`)) {
         try {
-          const issuesDelRes = await fetch(
-            `${process.env.BACKEND_URL}/api/issues?id=${data._id}`,
-            {
-              method: "DELETE"
-            }
-          );
+          const issuesDelRes = await fetch(`${process.env.BACKEND_URL}/api/issues?id=${data._id}`, {
+            method: 'DELETE',
+          });
 
           if (!issuesDelRes.ok) {
             throw new Error();
@@ -491,7 +474,7 @@ class IndexPage extends React.Component<IProps, IState> {
           }
           const issuesResData = await issuesRes.json();
           this.setState({
-            issues: issuesResData.reverse()
+            issues: issuesResData.reverse(),
           });
         } catch (e) {
           console.log(e);
@@ -500,24 +483,21 @@ class IndexPage extends React.Component<IProps, IState> {
     };
 
     // resolve issue button click
-    const issuesResolveClick = async data => {
+    const issuesResolveClick = async (data): Promise<void> => {
       try {
         await this.setState({
           currentIssue: {
             ...data,
             author: data.author._id,
             city: data.city._id,
-            resolved: "true",
-            resolvedBy: this.state.currentUser._id
-          }
+            resolved: 'true',
+            resolvedBy: this.state.currentUser._id,
+          },
         });
-        const issuesUpdateRes = await fetch(
-          `${process.env.BACKEND_URL}/api/issues?id=${data._id}`,
-          {
-            method: "PUT",
-            body: JSON.stringify(this.state.currentIssue)
-          }
-        );
+        const issuesUpdateRes = await fetch(`${process.env.BACKEND_URL}/api/issues?id=${data._id}`, {
+          method: 'PUT',
+          body: JSON.stringify(this.state.currentIssue),
+        });
         if (!issuesUpdateRes.ok) {
           throw new Error();
         }
@@ -527,7 +507,7 @@ class IndexPage extends React.Component<IProps, IState> {
         }
         const issuesResData = await issuesRes.json();
         this.setState({
-          issues: issuesResData.reverse()
+          issues: issuesResData.reverse(),
         });
       } catch (e) {
         console.log(e);
@@ -535,24 +515,21 @@ class IndexPage extends React.Component<IProps, IState> {
     };
 
     // upload avatar
-    const uploadAvatar = async (event) => {
-      const file = event.target.files[0]
+    const uploadAvatar = async (event): Promise<void> => {
+      const file = event.target.files[0];
       try {
         // get base64 from api
         const data = new FormData();
-        data.append("avatar", file);
-        data.append("name", this.state.currentUser._id);
-        data.append("quality", "90");
-        const avatarRes = await fetch(
-          process.env.PHOTO_API_URL,
-          {
-            method: "POST",
-            headers: {
-              'Authorization': `Bearer ${process.env.PHOTO_API_KEY}`,
-            },
-            body: data
-          }
-        );
+        data.append('avatar', file);
+        data.append('name', this.state.currentUser._id);
+        data.append('quality', '90');
+        const avatarRes = await fetch(process.env.PHOTO_API_URL, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${process.env.PHOTO_API_KEY}`,
+          },
+          body: data,
+        });
         if (!avatarRes.ok) {
           throw new Error();
         }
@@ -560,20 +537,17 @@ class IndexPage extends React.Component<IProps, IState> {
         this.setState({
           currentUser: {
             ...this.state.currentUser,
-            avatar: avatarResData.base64
-          }
+            avatar: avatarResData.base64,
+          },
         });
         // update user in database
         const updates = {
-          avatar: avatarResData.base64
+          avatar: avatarResData.base64,
         };
-        const userUpdateRes = await fetch(
-          `${process.env.BACKEND_URL}/api/users?id=${this.state.currentUser._id}`,
-          {
-            method: "PUT",
-            body: JSON.stringify(updates)
-          }
-        );
+        const userUpdateRes = await fetch(`${process.env.BACKEND_URL}/api/users?id=${this.state.currentUser._id}`, {
+          method: 'PUT',
+          body: JSON.stringify(updates),
+        });
         if (!userUpdateRes.ok) {
           throw new Error();
         }
@@ -584,7 +558,7 @@ class IndexPage extends React.Component<IProps, IState> {
         }
         const issuesResData = await issuesRes.json();
         this.setState({
-          issues: issuesResData.reverse()
+          issues: issuesResData.reverse(),
         });
       } catch (e) {
         console.log(e);
@@ -592,13 +566,13 @@ class IndexPage extends React.Component<IProps, IState> {
     };
 
     // arrow nav on click for mobile
-    const arrowClick = () => {
-      if(this.state.arrowDirection == "down") {
+    const arrowClick = (): void => {
+      if (this.state.arrowDirection == 'down') {
         window.scroll(0, window.document.body.scrollHeight);
-        this.setState({arrowDirection:"up"});
+        this.setState({ arrowDirection: 'up' });
       } else {
         window.scroll(0, 0);
-        this.setState({arrowDirection:"down"});
+        this.setState({ arrowDirection: 'down' });
       }
     };
 
@@ -607,16 +581,16 @@ class IndexPage extends React.Component<IProps, IState> {
       return (
         <div className="landing_container">
           <Loader active inline="centered" />
-          <p style={{ marginTop: "10px" }}>Loading please wait...</p>
+          <p style={{ marginTop: '10px' }}>Loading please wait...</p>
         </div>
       );
     } else if (this.state.loadingError && !this.state.loading) {
       return (
         <div className="landing_container">
-          <h1 style={{ color: "red", textAlign:'center' }}>{this.state.loadingError}</h1>
+          <h1 style={{ color: 'red', textAlign: 'center' }}>{this.state.loadingError}</h1>
         </div>
       );
-    } else if (!this.state.currentUser.hasOwnProperty("_id")) {
+    } else if (!this.state.currentUser.hasOwnProperty('_id')) {
       if (this.state.loginOpen) {
         return (
           <Login
@@ -682,11 +656,9 @@ class IndexPage extends React.Component<IProps, IState> {
                 center={this.state.mapCenter}
                 currentLocation={this.state.currentLocation}
                 issues={
-                  (this.state.issuesNav == "all" && this.state.issues) ||
-                  (this.state.issuesNav == "open" &&
-                    this.state.issues.filter(i => i.resolved === "false")) ||
-                  (this.state.issuesNav == "resolved" &&
-                    this.state.issues.filter(i => i.resolved === "true"))
+                  (this.state.issuesNav == 'all' && this.state.issues) ||
+                  (this.state.issuesNav == 'open' && this.state.issues.filter(i => i.resolved === 'false')) ||
+                  (this.state.issuesNav == 'resolved' && this.state.issues.filter(i => i.resolved === 'true'))
                 }
                 onClick={mapAddMarker}
                 markerClick={markerClick}
@@ -697,20 +669,14 @@ class IndexPage extends React.Component<IProps, IState> {
           <div className="issues_container">
             <Issues
               issues={
-                (this.state.issuesNav == "all" && this.state.issues) ||
-                (this.state.issuesNav == "open" &&
-                  this.state.issues.filter(i => i.resolved === "false")) ||
-                (this.state.issuesNav == "resolved" &&
-                  this.state.issues.filter(i => i.resolved === "true"))
+                (this.state.issuesNav == 'all' && this.state.issues) ||
+                (this.state.issuesNav == 'open' && this.state.issues.filter(i => i.resolved === 'false')) ||
+                (this.state.issuesNav == 'resolved' && this.state.issues.filter(i => i.resolved === 'true'))
               }
               activeNav={this.state.issuesNav}
               navOnClick={issuesNavClick}
-              openIssues={
-                this.state.issues.filter(i => i.resolved === "false").length
-              }
-              resolvedIssues={
-                this.state.issues.filter(i => i.resolved === "true").length
-              }
+              openIssues={this.state.issues.filter(i => i.resolved === 'false').length}
+              resolvedIssues={this.state.issues.filter(i => i.resolved === 'true').length}
               user={this.state.currentUser}
               editClick={issuesEditClick}
               cardClick={issuesCardClick}

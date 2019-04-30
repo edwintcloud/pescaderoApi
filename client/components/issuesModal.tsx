@@ -1,14 +1,22 @@
-import { Button, Icon, Modal, Header, Form } from "semantic-ui-react";
+import { Button, Icon, Modal, Header, Form } from 'semantic-ui-react';
+import React from 'react';
 
-export const IssuesModal = props => (
+interface Props {
+  open?: any;
+  currentIssue?: any;
+  user?: any;
+  title?: any;
+  issueTitleValueChange?: any;
+  issueTitleValueError?: any;
+  issueDescValueChange?: any;
+  issueDescValueError?: any;
+  cancelClick?: any;
+  submitClick?: any;
+}
+
+export const IssuesModal = (props: Props): JSX.Element => (
   <Modal open={props.open} className="issues_modal">
-    <Header
-      icon="pencil"
-      content={
-        (props.currentIssue.author !== props.user._id && "View Issue") ||
-        props.title
-      }
-    />
+    <Header icon="pencil" content={(props.currentIssue.author !== props.user._id && 'View Issue') || props.title} />
     <Modal.Content>
       <Form>
         <Form.Input
@@ -42,8 +50,8 @@ export const IssuesModal = props => (
           disabled={
             props.issueDescValueError ||
             props.issueTitleValueError ||
-            props.currentIssue.title === "" ||
-            props.currentIssue.description === ""
+            props.currentIssue.title === '' ||
+            props.currentIssue.description === ''
           }
           onClick={props.submitClick}
         >

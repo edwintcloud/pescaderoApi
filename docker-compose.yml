@@ -21,7 +21,7 @@ services:
   # Client
   pescadero-client:
     image: node:10.15-alpine
-    command: /bin/sh -c 'cd client && npm i && npm run dev;'
+    command: /bin/sh -c 'cd client && npm install && npm run dev;'
     ports:
       - "3000:3000"
     volumes:

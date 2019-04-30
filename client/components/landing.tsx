@@ -4,8 +4,7 @@ import React from 'react';
 interface Props {
   title?: string;
   subtitle?: string;
-  loginClick?: React.MouseEventHandler;
-  signupClick?: React.MouseEventHandler;
+  router?: any;
 }
 
 export const Landing = (props: Props): JSX.Element => (
@@ -14,10 +13,10 @@ export const Landing = (props: Props): JSX.Element => (
     <h3 className="landing_subtitle">{props.subtitle}</h3>
     <hr />
     <div className="landing_buttons">
-      <Button className="landing_button" onClick={props.loginClick}>
+      <Button className="landing_button" onClick={(): void => props.router.push('/login')}>
         Log In
       </Button>
-      <Button className="landing_button" onClick={props.signupClick}>
+      <Button className="landing_button" onClick={(): void => props.router.push('/signup')}>
         Sign Up
       </Button>
     </div>

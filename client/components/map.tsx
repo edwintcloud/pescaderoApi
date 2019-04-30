@@ -9,7 +9,65 @@ interface Props {
   zoom?: any;
   center?: any;
   markerClick?: any;
+  context?: any;
 }
+
+// Marker on click
+const markerClick = (event, data, context): void => {
+  if (data == undefined) {
+    const location = {
+      lat: String(event.latLng.lat()),
+      lng: String(event.latLng.lng()),
+    };
+    context.setState({
+      currentIssue: {
+        location: location,
+        author: context.state.currentUser._id,
+        city: context.state.currentUser.city,
+      },
+      modalOpen: true,
+      modalTitle: 'New Issue',
+      selectedIssue: '',
+    });
+  } else {
+    context.setState({
+      currentIssue: {
+        ...data,
+        author: data.author._id,
+        city: data.author.city,
+      },
+      selectedIssue: data._id,
+    });
+    const card = document.getElementById(data._id);
+    card.scrollIntoView();
+    card.parentElement.scrollBy(0, -20);
+    card.focus();
+    setTimeout((): void => card.blur(), 2000);
+  }
+};
+
+// Add marker to map component
+const mapAddMarker = (event, context): void => {
+  const location = {
+    lat: String(event.lat()),
+    lng: String(event.lng()),
+  };
+  context.setState({
+    currentIssue: {
+      location: location,
+      author: context.state.currentUser._id,
+      city: context.state.currentUser.city,
+      title: '',
+      description: '',
+    },
+    modalOpen: true,
+    modalTitle: 'New Issue',
+    selectedIssue: '',
+    messageVisible: false,
+    currentIssueDescError: false,
+    currentIssueTitleError: false,
+  });
+};
 
 const Markers = (props: Props): JSX.Element => (
   <>
@@ -55,13 +113,13 @@ export const Map = withScriptjs(
         zoom={props.zoom}
         center={props.center}
         onClick={(c): void => {
-          props.onClick(c.latLng);
+          mapAddMarker(c.latLng, props.context);
         }}
       >
         <Markers
           currentLocation={props.currentLocation}
           issues={props.issues}
-          onClick={props.markerClick}
+          onClick={(e, data): void => markerClick(e, data, props.context)}
           selectedIssue={props.selectedIssue}
         />
       </GoogleMap>

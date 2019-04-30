@@ -4,7 +4,7 @@ import * as actions from '../actions';
 interface Context {
   state?: Record<string, any>;
   setState?: CallableFunction;
-  sayHello?: CallableFunction;
+  users?: any;
 }
 
 export const Context = React.createContext<Context | null>(null);

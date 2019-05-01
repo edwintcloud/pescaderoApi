@@ -7,8 +7,9 @@ import (
 
 // API is our api model
 type API struct {
-	Server *gin.Engine
-	DB     *mgo.Database
+	Server    *gin.Engine
+	DB        *mgo.Database
+	DBSession *mgo.Session
 }
 
 // RegisterRoutes register api routes with gin server
